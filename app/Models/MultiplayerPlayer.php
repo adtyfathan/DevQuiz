@@ -14,6 +14,7 @@ class MultiplayerPlayer extends Model
         'multiplayer_quiz_id',
         'username',
         'point',
+        'status',
         'joined_at',
         'finished_at'
     ];

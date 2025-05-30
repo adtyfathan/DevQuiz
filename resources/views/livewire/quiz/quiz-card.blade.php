@@ -30,12 +30,12 @@
                         @if($difficulty || $limit)
                             @if($difficulty)
                                 <span class="bg-white px-3 py-1 rounded-md text-xs font-medium text-gray-700 border border-gray-200">
-                                    {{ ucfirst($difficulty) }} Level
+                                    {{ ucfirst($difficulty) }}
                                 </span>
                             @endif
                             @if($limit)
                                 <span class="bg-white px-3 py-1 rounded-md text-xs font-medium text-gray-700 border border-gray-200">
-                                    {{ $limit }} Questions
+                                    {{ $limit }}
                                 </span>
                             @endif
                         @else
