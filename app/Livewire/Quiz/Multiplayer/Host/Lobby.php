@@ -23,6 +23,11 @@ class Lobby extends Component
             abort(403, 'You are not the host of this lobby.');
         }
     }
+
+    public function playerChanged($data)
+    {
+        $this->setPlayersData();
+    }
     
     public function getLobbyData()
     {
@@ -33,10 +38,18 @@ class Lobby extends Component
             ->where('lobby_code', $this->lobbyCode)
             ->where('status', 'waiting')
             ->first();
-            
-        $this->players = $this->quiz->multiplayerPlayer;
+        
+        if(!$this->quiz) abort(404, 'Quiz not found.');
+        
+        $this->setPlayersData();
 
         $this->host = $this->quiz->host;
+    }
+
+    public function setPlayersData()
+    {
+        $this->quiz->load('multiplayerPlayer');
+        $this->players = $this->quiz->multiplayerPlayer;
     }
 
     public function deleteLobby()

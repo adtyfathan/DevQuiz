@@ -5,6 +5,7 @@ namespace App\Livewire\Quiz;
 use Illuminate\Support\Facades\Auth;
 use App\Models\MultiplayerPlayer;
 use Livewire\Component;
+use App\Events\PlayerJoinedLobby;
 use App\Models\MultiplayerQuiz;
 
 class JoinLobby extends Component
@@ -52,7 +53,7 @@ class JoinLobby extends Component
             return;
         }
 
-        MultiplayerPlayer::create([
+        $newPlayer = MultiplayerPlayer::create([
             'player_id' => $playerId,
             'multiplayer_quiz_id' => $multiplayerLobby->id,
             'username' => $this->username,
@@ -61,6 +62,8 @@ class JoinLobby extends Component
             'joined_at' => now(),
             'finished_at' => null
         ]);
+
+        broadcast(new PlayerJoinedLobby($multiplayerLobby, $newPlayer));
 
         $this->redirect(route('quiz.multiplayer.player.lobby', ['lobbyCode' => $multiplayerLobby->lobby_code]), navigate: true);
     }

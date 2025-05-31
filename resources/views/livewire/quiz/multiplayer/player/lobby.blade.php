@@ -8,6 +8,14 @@
     <div class="py-12">
         <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div class="bg-white shadow-lg sm:rounded-xl p-6">
+                <!-- Leave lobby button -->
+                <div class="flex flex-wrap gap-3 mb-6 pb-4 border-b border-gray-200">
+                    <button wire:click="leaveLobby" wire:confirm="Are you sure you want to leave this lobby?"
+                        class="inline-flex items-center px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-medium rounded-lg transition-colors duration-200 shadow-sm hover:shadow-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2">
+                        Leave Lobby
+                    </button>
+                </div>
+
                 <!-- Lobby Code -->
                 <div class="flex items-center justify-between mb-6">
                     <div>
@@ -16,7 +24,7 @@
                             {{ $quiz->lobby_code }}
                         </p>
                     </div>
-                    <button onclick="copyCode()"
+                    <button onclick="copyCode(event)"
                         class="inline-flex items-center px-3 py-2 text-sm font-medium text-indigo-600 hover:text-white hover:bg-indigo-600 border border-indigo-600 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
                         <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -77,8 +85,8 @@
 
                     @if(count($players) > 0)
                         <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
-                            @foreach ($players as $player)
-                                <div
+                            @foreach ($players as $index => $player)
+                                <div wire:key="player-{{ $player->id }}"
                                     class="bg-indigo-50 border border-indigo-200 rounded-xl p-3 text-center text-indigo-700 font-semibold hover:bg-indigo-100 transition-colors duration-200">
                                     <div class="flex items-center justify-center mb-1">
                                         <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
@@ -108,10 +116,19 @@
     </div>
 
     <script>
-        function copyCode() {
+        document.addEventListener('livewire:initialized', () => {
+            Echo.private('quiz-lobby.{{ $quiz->lobby_code }}')
+                .listen('PlayerJoinedLobby', (data) => {
+                    @this.call('playerChanged', data);
+                })
+                .listen('PlayerLeaveLobby', (data) => {
+                    @this.call('playerChanged', data);
+                });
+        });
+
+        function copyCode(event) {
             const code = document.getElementById('lobbyCode').innerText.trim();
             navigator.clipboard.writeText(code).then(function () {
-                // Optional: Show a success message
                 const button = event.target.closest('button');
                 const originalText = button.innerHTML;
                 button.innerHTML = `
@@ -120,14 +137,48 @@
                     </svg>
                     Copied!
                 `;
-                button.classList.add('bg-green-600', 'text-white');
-                button.classList.remove('text-indigo-600', 'hover:text-white', 'hover:bg-indigo-600');
+                button.classList.add('bg-green-600', 'text-white', 'border-green-600');
+                button.classList.remove('text-indigo-600', 'hover:text-white', 'hover:bg-indigo-600', 'border-indigo-600');
 
                 setTimeout(() => {
                     button.innerHTML = originalText;
-                    button.classList.remove('bg-green-600', 'text-white');
-                    button.classList.add('text-indigo-600', 'hover:text-white', 'hover:bg-indigo-600');
+                    button.classList.remove('bg-green-600', 'text-white', 'border-green-600');
+                    button.classList.add('text-indigo-600', 'hover:text-white', 'hover:bg-indigo-600', 'border-indigo-600');
                 }, 2000);
+            }).catch(function (err) {
+                // Fallback for older browsers
+                console.error('Could not copy text: ', err);
+
+                // Create a temporary textarea for fallback
+                const textArea = document.createElement('textarea');
+                textArea.value = code;
+                document.body.appendChild(textArea);
+                textArea.focus();
+                textArea.select();
+
+                try {
+                    document.execCommand('copy');
+                    const button = event.target.closest('button');
+                    const originalText = button.innerHTML;
+                    button.innerHTML = `
+                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                        Copied!
+                    `;
+                    button.classList.add('bg-green-600', 'text-white', 'border-green-600');
+                    button.classList.remove('text-indigo-600', 'hover:text-white', 'hover:bg-indigo-600', 'border-indigo-600');
+
+                    setTimeout(() => {
+                        button.innerHTML = originalText;
+                        button.classList.remove('bg-green-600', 'text-white', 'border-green-600');
+                        button.classList.add('text-indigo-600', 'hover:text-white', 'hover:bg-indigo-600', 'border-indigo-600');
+                    }, 2000);
+                } catch (fallbackErr) {
+                    console.error('Fallback copy failed: ', fallbackErr);
+                }
+
+                document.body.removeChild(textArea);
             });
         }
     </script>

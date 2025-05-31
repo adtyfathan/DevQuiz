@@ -5,7 +5,9 @@ namespace App\Livewire\Quiz\Multiplayer\Player;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
+use App\Events\PlayerLeaveLobby;
 use App\Models\MultiplayerQuiz;
+use App\Models\MultiplayerPlayer;
 
 class Lobby extends Component
 { 
@@ -23,8 +25,32 @@ class Lobby extends Component
         if(Auth::user()->id === $this->host->id){
             abort(403, 'Host cant join the lobby.');
         }
+
+        $isJoined = MultiplayerPlayer::where('player_id', Auth::user()->id)
+            ->where('multiplayer_quiz_id', $this->quiz->id)
+            ->exists();
+        
+        if(!$isJoined) abort(403, 'You must join the quiz first.');
     }
 
+    public function playerChanged($data)
+    {
+        $this->setPlayersData();
+    }
+    
+    public function leaveLobby()
+    {
+        $playerData = MultiplayerPlayer::where('player_id', Auth::user()->id)
+            ->where('multiplayer_quiz_id', $this->quiz->id)
+            ->first();
+        
+        broadcast(new PlayerLeaveLobby($this->quiz, $playerData));
+
+        $playerData->delete();
+
+        $this->redirect(route('home'), navigate: true);
+    }
+    
     public function getLobbyData()
     {
         $this->quiz = MultiplayerQuiz::with(
@@ -36,10 +62,16 @@ class Lobby extends Component
             ->first();
         
         if(!$this->quiz) abort(404, 'Quiz not found.');
-            
-        $this->players = $this->quiz->multiplayerPlayer;
+        
+        $this->setPlayersData();
 
         $this->host = $this->quiz->host;
+    }
+
+    public function setPlayersData()
+    {
+        $this->quiz->load('multiplayerPlayer');
+        $this->players = $this->quiz->multiplayerPlayer;
     }
 
     #[Layout('layouts.app')] 
