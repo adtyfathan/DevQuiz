@@ -39,6 +39,15 @@ class Lobby extends Component
         $this->host = $this->quiz->host;
     }
 
+    public function deleteLobby()
+    {
+        $quizLobby = MultiplayerQuiz::find($this->quiz->id);
+        
+        $quizLobby->delete();
+
+        $this->redirect(route('home'), navigate: true);
+    }
+
     #[Layout('layouts.app')] 
     public function render()
     {

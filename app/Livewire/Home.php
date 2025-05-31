@@ -73,6 +73,11 @@ class Home extends Component
         return null;
     }
 
+    public function createLobby()
+    {
+        $this->redirect(route('quiz.multiplayer.host.create'), navigate: true);
+    }
+
     #[Layout('layouts.app')] 
     public function render()
     {

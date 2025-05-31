@@ -17,6 +17,7 @@ class Lobby extends Component
     public function mount($lobbyCode)
     {
         $this->lobbyCode = $lobbyCode;
+
         $this->getLobbyData();
 
         if(Auth::user()->id === $this->host->id){
@@ -33,6 +34,8 @@ class Lobby extends Component
             ->where('lobby_code', $this->lobbyCode)
             ->where('status', 'waiting')
             ->first();
+        
+        if(!$this->quiz) abort(404, 'Quiz not found.');
             
         $this->players = $this->quiz->multiplayerPlayer;
 
