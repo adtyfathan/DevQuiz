@@ -11,6 +11,7 @@ use App\Livewire\Quiz\Multiplayer\Host\Edit as EditLobby;
 
 // Player Lobby
 use App\Livewire\Quiz\Multiplayer\Player\Lobby as PlayerLobby;
+use App\Livewire\Quiz\Multiplayer\Player\Start as QuizStart;
 
 
 Route::middleware(['auth'])->group(function(){
@@ -26,6 +27,7 @@ Route::middleware(['auth'])->group(function(){
         Route::prefix('multiplayer')->name('.multiplayer')->group(function(){
             Route::prefix('player')->name('.player')->group(function(){
                 Route::get('lobby/{lobbyCode}', PlayerLobby::class)->name('.lobby');
+                Route::get('start/{quizId}', QuizStart::class)->name('.start');
             });
 
             Route::prefix('host')->name('.host')->group(function(){

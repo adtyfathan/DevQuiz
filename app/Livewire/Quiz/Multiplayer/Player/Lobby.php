@@ -74,6 +74,11 @@ class Lobby extends Component
         $this->players = $this->quiz->multiplayerPlayer;
     }
 
+    public function quizStarted($data)
+    {
+        $this->redirect(route('quiz.multiplayer.player.start', ['quizId' => $this->quiz->id]), navigate: true);
+    }
+
     #[Layout('layouts.app')] 
     public function render()
     {

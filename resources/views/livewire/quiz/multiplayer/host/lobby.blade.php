@@ -32,6 +32,11 @@
                         </svg>
                         Delete Lobby
                     </button>
+
+                    <button wire:click="startQuiz"
+                        class="inline-flex items-center px-4 py-2 bg-green-600 hover:bg-green-700 text-white font-medium rounded-lg transition-colors duration-200 shadow-sm hover:shadow-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2">
+                        Start Quiz
+                    </button>
                 </div>
 
                 <!-- Lobby Code -->

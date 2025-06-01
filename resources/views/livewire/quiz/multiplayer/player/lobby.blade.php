@@ -124,6 +124,10 @@
                 .listen('PlayerLeaveLobby', (data) => {
                     @this.call('playerChanged', data);
                 });
+            Echo.private('multiplayer.{{ $quiz->id }}')
+                .listen('QuizStarted', (data) => {
+                    @this.call('quizStarted', data);
+                });
         });
 
         function copyCode(event) {
