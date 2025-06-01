@@ -30,7 +30,7 @@ class QuestionSchedulerService{
         $memeDuration = 5;
         $standingsDuration = 10;
 
-        $startTime = now()->addSeconds(3);
+        $startTime = now()->addSeconds(5);
         
         foreach ($questions as $index => $question) {
             $openingAt = $startTime->copy()->addSeconds(($openingDuration + $questionDuration + $memeDuration + $standingsDuration) * $index);
