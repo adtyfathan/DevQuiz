@@ -9,6 +9,8 @@ use Illuminate\Notifications\Notifiable;
 use App\Models\MultiplayerQuiz;
 use App\Models\MultiplayerPlayer;
 use App\Models\CompletedQuiz;
+use App\Models\SingleplayerQuiz;
+use App\Models\TemporalQuiz;
 
 class User extends Authenticatable
 {
@@ -62,5 +64,15 @@ class User extends Authenticatable
     public function completedQuiz()
     {
         return $this->hasMany(CompletedQuiz::class, 'user_id');
+    }
+
+    public function singleplayerQuiz()
+    {
+        return $this->hasMany(SingleplayerQuiz::class, 'user_id');
+    }
+
+    public function temporalQuiz()
+    {
+        return $this->hasMany(TemporalQuiz::class, 'user_id');
     }
 }

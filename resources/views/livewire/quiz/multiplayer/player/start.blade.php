@@ -140,9 +140,6 @@
                         this.containers.meme.innerHTML = `
                             <div class="flex flex-col items-center space-y-4">
                                 <p class="text-xl font-semibold text-gray-700">Time for a meme!</p>
-                                <div class="w-64 h-64 bg-gray-200 rounded-lg flex items-center justify-center">
-                                    <span class="text-gray-500">Meme placeholder</span>
-                                </div>
                             </div>
                         `;
                     });
@@ -171,9 +168,13 @@
                         document.querySelectorAll(".answer-option").forEach(input => input.disabled = true);
                         const isTrue = this.checkAnswer(correctAnswer, userAnswer);
 
-                        const correctPoint = 100;
+                        let correctPoint = 0;
 
-                        @this.call('handlePlayerAnswer', 0, null, false);
+                        let bonusPoint = this.countdown * 10;
+
+                        if (isTrue) correctPoint = 100 + bonusPoint;
+
+                        @this.call('handlePlayerAnswer', correctPoint, userAnswer, isTrue);
                     });
                 });
             },
@@ -196,6 +197,7 @@
             },
 
             displaySection(sectionName, renderCallback) {
+                console.log(`Switching to ${sectionName} section at ${new Date().toISOString()}`);
                 Object.keys(this.containers).forEach(name => {
                     this.containers[name].style.display = name === sectionName ? "block" : "none";
                 });
@@ -208,13 +210,18 @@
                 const elapsed = Math.floor((now - scheduledAt) / 1000);
                 let timeLeft = Math.max(0, duration - elapsed);
 
+                console.log(`Starting timer for ${duration} seconds at ${now.toISOString()}`);
+                
                 clearInterval(this.countdown);
                 this.timerText.textContent = `Timer: ${timeLeft}`;
 
                 this.countdown = setInterval(() => {
                     timeLeft--;
                     this.timerText.textContent = `Timer: ${timeLeft}`;
-                    if (timeLeft <= 0) clearInterval(this.countdown);
+                    if (timeLeft <= 0) {
+                        clearInterval(this.countdown);
+                        console.log(`Timer finished at ${new Date().toISOString()}`);
+                    }
                 }, 1000);
             },
 
@@ -225,7 +232,19 @@
 
                 setTimeout(() => {
                     this.startTimer(event.standingsAt, 10);
-                    this.displaySection("standings", () => this.renderStandings(event.players));
+                    this.displaySection("standings", () => {
+                        this.renderStandings(event.players);
+                        
+                        // If this is the last standings sequence
+                        if (event.isLast) {
+
+                            setTimeout(() => {
+                                this.displaySection("result", () => {
+                                    this.renderFinalResults(event.players, event.category, event.difficulty);
+                                });
+                            }, 10000); 
+                        }
+                    });
                 }, standingsDelay);
             },
 
@@ -238,6 +257,28 @@
                         <td>${player.point}</td>
                     </tr>
                 `).join('');
+            },
+
+            renderFinalResults(players, category, difficulty) {
+                const winner = players[0]; // First player has highest points
+                this.containers.result.innerHTML = `
+                    <div class="text-center space-y-6">
+                        <h2 class="text-2xl font-bold text-gray-800">Quiz Complete!</h2>
+                        <div class="bg-yellow-100 p-6 rounded-lg">
+                            <h3 class="text-xl font-semibold text-gray-700 mb-2">Winner</h3>
+                            <p class="text-lg text-gray-600">${winner.username}</p>
+                            <p class="text-2xl font-bold text-yellow-600">${winner.point} points</p>
+                        </div>
+                        <div class="mt-4 text-gray-600">
+                            <p>Category: ${category}</p>
+                            <p>Difficulty: ${difficulty}</p>
+                        </div>
+                        <a href="/home" 
+                           class="inline-block mt-4 px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700">
+                            Back to Home
+                        </a>
+                    </div>
+                `;
             }
         };
 

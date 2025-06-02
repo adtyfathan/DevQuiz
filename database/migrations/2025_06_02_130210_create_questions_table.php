@@ -14,12 +14,12 @@ return new class extends Migration
         Schema::create('questions', function (Blueprint $table) {
             $table->id();
             $table->text('question');
-            $table->text('description');
-            $table->json('answers'); // Array pilihan jawaban
-            $table->json('correct_answers'); // Array jawaban yang benar
-            $table->text('explanation');
+            $table->text('description')->nullable();
+            $table->json('answers'); 
+            $table->json('correct_answers');
+            $table->text('explanation')->nullable();
             $table->string('category');
-            $table->string('difficulty')->nullable();
+            $table->string('difficulty');
             $table->timestamps();
         });
     }

@@ -67,7 +67,10 @@ class Lobby extends Component
     {
         if($this->quiz->status !== 'waiting') abort(403, 'Quiz already started or finished.');
         
-        $this->quiz->update(['status' => 'in_progress']);
+        $this->quiz->update([
+            'status' => 'in_progress',
+            'started_at' => now(),
+        ]);
 
         broadcast(new QuizStarted($this->quiz));
 
