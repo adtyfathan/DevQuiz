@@ -126,7 +126,20 @@
                 });
             Echo.private('multiplayer.{{ $quiz->id }}')
                 .listen('QuizStarted', (data) => {
-                    @this.call('quizStarted', data);
+                    let retries = 0;
+                    const maxRetries = 3;
+
+                    const tryRedirect = () => {
+                        if (retries >= maxRetries) return;
+
+                        @this.call('quizStarted', data)
+                            .catch(() => {
+                                retries++;
+                                setTimeout(tryRedirect, 1000);
+                            });
+                    };
+
+                    tryRedirect();
                 });
         });
 

@@ -3,49 +3,61 @@
 namespace App\Livewire\Quiz\Multiplayer\Player;
 
 use Livewire\Attributes\Layout;
-use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 use App\Models\MultiplayerQuiz;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Validator;
 
 class Start extends Component
 {
     public $quiz;
-
     public $player;
-    
+    public $currentQuestion = 0;
+    public $totalPoints = 0;
+
     public function mount($quizId)
     {
-        $this->quiz = MultiplayerQuiz::find($quizId);
-
+        $this->quiz = MultiplayerQuiz::findOrFail($quizId);
         $this->player = Auth::user();
+        
+        // Clear previous answers
+        $this->clearPreviousAnswers();
     }
     
     public function handlePlayerAnswer($point, $userAnswer, $isCorrect)
     {
-        $cacheKey = "quiz_session:{$this->quiz->id}:user:{$this->player->id}:answers";
+        $cacheKey = $this->getAnswersCacheKey();
         $answers = Cache::get($cacheKey, []);
 
         $answers[] = [
             'answer' => $userAnswer,
             'is_correct' => $isCorrect,
             'point' => $point,
-            'time' => now()->toDateTimeString()
+            'time' => now()->toDateTimeString(),
+            'question_number' => $this->currentQuestion
         ];
 
         Cache::put($cacheKey, $answers, now()->addMinutes(25));
-
-        $newPoint = $this->player->point + $point;
-
-        $this->player->update([
-            'point' => $newPoint
-        ]);
+        
+        $this->totalPoints += $point;
+        $this->player->update(['point' => $this->totalPoints]);
     }
-    
+
+    private function getAnswersCacheKey(): string
+    {
+        return "quiz_session:{$this->quiz->id}:user:{$this->player->id}:answers";
+    }
+
+    private function clearPreviousAnswers(): void
+    {
+        Cache::forget($this->getAnswersCacheKey());
+    }
+
     #[Layout('layouts.app')] 
     public function render()
     {
-        return view('livewire.quiz.multiplayer.player.start');
+        return view('livewire.quiz.multiplayer.player.start', [
+            'questionDuration' => $this->quiz->question_duration
+        ]);
     }
 }
