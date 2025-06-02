@@ -27,6 +27,19 @@ class QuestionSchedulerService
                 $quiz->total_questions
             );
 
+            foreach($questions as $question){
+                // question = id
+                // masukin ke tabel question    
+
+                // masukin tabel temporal
+                // player id
+                // quiz id
+                // question id
+            }
+
+            //  fungsi get existingQuestion
+            // ngambil dari tabel temporal where quiz id  = && player =  
+
             $startTime = now()->addSeconds(5);
             
             foreach ($questions as $index => $question) {
