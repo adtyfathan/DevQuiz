@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\MultiplayerQuiz;
 use App\Services\QuizService;
 use App\Models\MultiplayerPlayer;
+use App\Models\Question;
 use App\Jobs\BroadcastQuestion;
 use App\Jobs\BroadcastStandings;
 use Exception;
@@ -27,22 +28,22 @@ class QuestionSchedulerService
                 $quiz->total_questions
             );
 
-            foreach($questions as $question){
-                // question = id
-                // masukin ke tabel question    
-
-                // masukin tabel temporal
-                // player id
-                // quiz id
-                // question id
-            }
-
-            //  fungsi get existingQuestion
-            // ngambil dari tabel temporal where quiz id  = && player =  
-
             $startTime = now()->addSeconds(5);
             
             foreach ($questions as $index => $question) {
+                Question::firstOrCreate(
+                    ['id' => $question['id']],
+                    [
+                        'question' => $question['question'],
+                        'category' => $question['category'],
+                        'difficulty' => $question['difficulty'],
+                        'description' => $question['description'],
+                        'answers' => json_encode($question['answers']),
+                        'correct_answers' => json_encode($question['correct_answers']),
+                        'explanation' => $question['explanation']
+                    ]
+                );
+
                 $timings = $this->calculateTimings(
                     $startTime, 
                     $index, 

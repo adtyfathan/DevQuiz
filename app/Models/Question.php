@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Models\TemporalQuiz;
+use App\Models\PlayerAnswer;
 
 class Question extends Model
 {
@@ -22,5 +23,10 @@ class Question extends Model
     public function temporalQuiz()
     {
         return $this->hasMany(TemporalQuiz::class, 'question_id');
+    }
+
+    public function playerAnswers()
+    {
+        return $this->hasMany(PlayerAnswer::class, 'question_id');
     }
 }

@@ -4,31 +4,37 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Models\User;
+use App\Models\Question;
+use App\Models\MultiplayerQuiz;
+use App\Models\SingleplayerQuiz;
 
-class CompletedQuiz extends Model
+class PlayerAnswer extends Model
 {
-    protected $table = "completed_quiz";
+    protected $table = "player_answer";
     protected $fillable = [
-        'quiz_type',
-        'user_id',
+        'player_id',
+        'question_id',
         'multiplayer_quiz_id',
         'singleplayer_quiz_id',
-        'score',
-        'true_answer_count',
-        'category',
-        'difficulty',
-        'completed_at'
+        'quiz_type',
+        'answer'
     ];
 
     public function user()
     {
-        $this->belongsTo(User::class, 'user_id');
+        return $this->belongsTo(User::class, 'player_id');
     }
 
+    public function question()
+    {
+        return $this->belongsTo(Question::class, 'question_id');
+    }
+    
     public function multiplayerQuiz()
     {
         return $this->belongsTo(MultiplayerQuiz::class, 'multiplayer_quiz_id');
     }
+    
     public function singleplayerQuiz()
     {
         return $this->belongsTo(SingleplayerQuiz::class, 'singleplayer_quiz_id');

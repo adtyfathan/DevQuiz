@@ -11,6 +11,7 @@ use App\Models\MultiplayerPlayer;
 use App\Models\CompletedQuiz;
 use App\Models\SingleplayerQuiz;
 use App\Models\TemporalQuiz;
+use App\Models\PlayerAnswer;
 
 class User extends Authenticatable
 {
@@ -74,5 +75,10 @@ class User extends Authenticatable
     public function temporalQuiz()
     {
         return $this->hasMany(TemporalQuiz::class, 'user_id');
+    }
+
+    public function playerAnswer()
+    {
+        return $this->hasMany(PlayerAnswer::class, 'player_id');
     }
 }

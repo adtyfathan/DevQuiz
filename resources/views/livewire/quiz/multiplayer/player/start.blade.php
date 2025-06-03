@@ -60,7 +60,6 @@
             countdown: null,
             hasAnswered: false,
             questionCounter: 0,
-            questions: [],
 
             init() {
                 this.initializeEventListeners();
@@ -121,7 +120,6 @@
 
             scheduleQuestionPhase(delay, event) {
                 setTimeout(() => {
-                    this.questions.push(event.question);
                     const timeoutDuration = {{ $questionDuration }} * 1000;
                     this.startTimer(event.questionAt, {{ $questionDuration }});
                     this.displaySection("quiz", () => this.renderQuestion(event.question));
@@ -169,12 +167,12 @@
                         const isTrue = this.checkAnswer(correctAnswer, userAnswer);
 
                         let correctPoint = 0;
-
                         let bonusPoint = this.countdown * 10;
 
                         if (isTrue) correctPoint = 100 + bonusPoint;
 
-                        @this.call('handlePlayerAnswer', correctPoint, userAnswer, isTrue);
+                        // Add question ID to the call
+                        @this.call('handlePlayerAnswer', correctPoint, userAnswer, isTrue, question.id);
                     });
                 });
             },
@@ -260,6 +258,7 @@
             },
 
             renderFinalResults(players, category, difficulty) {
+                @this.call('endQuiz');
                 const winner = players[0]; // First player has highest points
                 this.containers.result.innerHTML = `
                     <div class="text-center space-y-6">

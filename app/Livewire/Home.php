@@ -53,7 +53,7 @@ class Home extends Component
             ->where('status', 'waiting')
             ->first();
         
-        if ($playerQuiz && $playerQuiz->multiplayerQuiz) {
+        if ($playerQuiz && $playerQuiz->multiplayerQuiz && $playerQuiz->multiplayerQuiz->status === 'waiting') {
             $this->joinedQuiz = $playerQuiz->multiplayerQuiz;
         } else {
             $this->joinedQuiz = null;
