@@ -38,10 +38,11 @@ class Lobby extends Component
                 'host'
             )
             ->where('lobby_code', $this->lobbyCode)
-            ->where('status', 'waiting')
             ->first();
         
-        if(!$this->quiz) abort(404, 'Quiz not found.');
+        if(!$this->quiz) abort(404, 'Lobby not found.');
+
+        if(!$this->quiz->status === 'finished') $this->redirect(route('home'), navigate: true);
         
         $this->setPlayersData();
 

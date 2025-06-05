@@ -68,33 +68,31 @@ class Start extends Component
 
     public function endQuiz()
     {
-        $savedAnswers = [];
-        $trueAnswerCount = 0;
-        $score = 0;
-        
         $cacheKey = $this->getAnswersCacheKey();
         $answers = Cache::get($cacheKey, []);
         
+        $trueAnswerCount = 0;
+        $score = 0;
+        
+        // Create PlayerAnswer records directly from the cached answers
         foreach ($answers as $answer) {
-            array_push($savedAnswers, $answer['answer']);
             if ($answer['is_correct']) {
                 $trueAnswerCount++;
                 $score += $answer['point'];
             }
-        };
 
-        foreach ($savedAnswers as $savedAnswer){
+            // Create PlayerAnswer for each answer with its correct question_id
             PlayerAnswer::create([
                 'player_id' => $this->player->id,
-                'question_id' => $answer['question_id'],
+                'question_id' => $answer['question_id'], // This now correctly uses each answer's question_id
                 'multiplayer_quiz_id' => $this->quiz->id,
                 'singleplayer_quiz_id' => null,
                 'quiz_type' => 'multiplayer',
-                'answer' => $savedAnswer
+                'answer' => $answer['answer']
             ]);
         }
 
-        CompletedQuiz::create([
+        $completedQuiz = CompletedQuiz::create([
             'quiz_type' => 'multiplayer',
             'user_id' => $this->player->id,
             'multiplayer_quiz_id' => $this->quiz->id,
@@ -113,7 +111,9 @@ class Start extends Component
         ]);
         
         $this->redirect(
-            route('home'), 
+            route('quiz.multiplayer.player.summary', [
+                'completedQuizId' => $completedQuiz->id
+            ]), 
             navigate: true
         );
     }

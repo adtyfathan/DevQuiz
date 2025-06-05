@@ -125,7 +125,7 @@
                     this.displaySection("quiz", () => this.renderQuestion(event.question));
                     setTimeout(() => {
                         if (!this.hasAnswered) {
-                            @this.call('handlePlayerAnswer', 0, null, false);
+                            @this.call('handlePlayerAnswer', 0, null, false, event.question.id);
                         }
                     }, timeoutDuration);
                 }, delay);
