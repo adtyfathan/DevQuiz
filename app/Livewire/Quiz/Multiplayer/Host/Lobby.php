@@ -5,6 +5,8 @@ namespace App\Livewire\Quiz\Multiplayer\Host;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
+use App\Events\QuizStarted;
+use App\Services\QuestionSchedulerService;
 use App\Models\MultiplayerQuiz;
 
 class Lobby extends Component
@@ -36,10 +38,11 @@ class Lobby extends Component
                 'host'
             )
             ->where('lobby_code', $this->lobbyCode)
-            ->where('status', 'waiting')
             ->first();
         
-        if(!$this->quiz) abort(404, 'Quiz not found.');
+        if(!$this->quiz) abort(404, 'Lobby not found.');
+
+        if(!$this->quiz->status === 'finished') $this->redirect(route('home'), navigate: true);
         
         $this->setPlayersData();
 
@@ -59,6 +62,22 @@ class Lobby extends Component
         $quizLobby->delete();
 
         $this->redirect(route('home'), navigate: true);
+    }
+
+    public function startQuiz()
+    {
+        if($this->quiz->status !== 'waiting') abort(403, 'Quiz already started or finished.');
+        
+        $this->quiz->update([
+            'status' => 'in_progress',
+            'started_at' => now(),
+        ]);
+
+        broadcast(new QuizStarted($this->quiz));
+
+        app(QuestionSchedulerService::class)->start($this->quiz);
+
+        // tambah kode buat notify kuis mulai
     }
 
     #[Layout('layouts.app')] 

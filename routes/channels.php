@@ -35,3 +35,27 @@ Broadcast::channel('quiz-lobby.{lobbyCode}', function ($user, $lobbyCode) {
     
     return false;
 });
+
+Broadcast::channel('multiplayer.{quizId}', function ($user, $quizId) {
+    $quiz = MultiplayerQuiz::find($quizId);
+
+    if (!$quiz) return false;
+
+    if ($quiz->host_id === $user->id) {
+        return true;
+    }
+
+   return MultiplayerPlayer::where('multiplayer_quiz_id', $quizId)
+        ->where('player_id', $user->id)
+        ->exists();
+});
+
+Broadcast::channel('quiz.{quizId}', function ($user, $quizId) {
+    $quiz = MultiplayerQuiz::find($quizId);
+
+    if (!$quiz) return false;
+
+   return MultiplayerPlayer::where('multiplayer_quiz_id', $quizId)
+        ->where('player_id', $user->id)
+        ->exists();
+});

@@ -12,8 +12,8 @@ class Home extends Component
 {
     public $userId;
     public $hostedQuiz;
-
     public $joinedQuiz;
+    public $inProgressQuiz;
 
     public function mount()
     {
@@ -24,6 +24,8 @@ class Home extends Component
         $this->getHostedQuiz();
 
         $this->getJoinedQuiz();
+        
+        $this->getInProgressQuiz();
     }
 
     public function getHostedQuiz()
@@ -35,12 +37,8 @@ class Home extends Component
 
     public function getHostedQuizUrl()
     {
-        $hostedLobby = MultiplayerQuiz::where('host_id', $this->userId)
-            ->where('status', 'waiting')
-            ->first();
-
-        if ($hostedLobby) {
-            return route('quiz.multiplayer.host.lobby', ['lobbyCode' => $hostedLobby->lobby_code]);
+        if ($this->hostedQuiz) {
+            return route('quiz.multiplayer.host.lobby', ['lobbyCode' => $this->hostedQuiz->lobby_code]);
         }
         return null;
     }
@@ -53,7 +51,7 @@ class Home extends Component
             ->where('status', 'waiting')
             ->first();
         
-        if ($playerQuiz && $playerQuiz->multiplayerQuiz) {
+        if ($playerQuiz && $playerQuiz->multiplayerQuiz && $playerQuiz->multiplayerQuiz->status === 'waiting') {
             $this->joinedQuiz = $playerQuiz->multiplayerQuiz;
         } else {
             $this->joinedQuiz = null;
@@ -61,14 +59,31 @@ class Home extends Component
     }
 
     public function getRejoinQuizUrl()
+    {  
+        if ($this->joinedQuiz && $this->joinedQuiz->status === 'waiting') {
+            return route('quiz.multiplayer.player.lobby', ['lobbyCode' => $this->joinedQuiz->lobby_code]);
+        }
+        return null;
+    }
+
+    public function getInProgressQuiz()
     {
-        $ongoingQuiz = MultiplayerPlayer::with('multiplayerQuiz')
+        $inProgressQuiz = MultiplayerPlayer::with('multiplayerQuiz')
             ->where('player_id', $this->userId)
-            ->where('status', 'waiting')
+            ->where('status', 'in_progress')
             ->first();
         
-        if ($ongoingQuiz && $ongoingQuiz->multiplayerQuiz) {
-            return route('quiz.multiplayer.player.lobby', ['lobbyCode' => $ongoingQuiz->multiplayerQuiz->lobby_code]);
+        if($inProgressQuiz && $inProgressQuiz->multiplayerQuiz && $inProgressQuiz->multiplayerQuiz->status === 'in_progress') {
+            $this->inProgressQuiz = $inProgressQuiz->multiplayerQuiz;
+        } else {
+            $this->inProgressQuiz = null;
+        }
+    }
+
+    public function getInProgressQuizUrl()
+    {
+        if ($this->inProgressQuiz && $this->inProgressQuiz->status === 'in_progress') {
+            return route('quiz.multiplayer.player.start', ['quizId' => $this->inProgressQuiz->id]);
         }
         return null;
     }

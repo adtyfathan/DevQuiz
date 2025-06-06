@@ -74,6 +74,23 @@ class Lobby extends Component
         $this->players = $this->quiz->multiplayerPlayer;
     }
 
+    public function quizStarted($data)
+    {
+        try {
+            // Verify quiz status before redirecting
+            $quiz = MultiplayerQuiz::find($this->quiz->id);
+            
+            if ($quiz && $quiz->status === 'in_progress') {
+                $this->redirect(
+                    route('quiz.multiplayer.player.start', ['quizId' => $this->quiz->id]), 
+                    navigate: true
+                );
+            }
+        } catch (\Exception $e) {
+            report($e);
+        }
+    }
+
     #[Layout('layouts.app')] 
     public function render()
     {

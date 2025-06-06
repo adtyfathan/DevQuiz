@@ -124,6 +124,23 @@
                 .listen('PlayerLeaveLobby', (data) => {
                     @this.call('playerChanged', data);
                 });
+            Echo.private('multiplayer.{{ $quiz->id }}')
+                .listen('QuizStarted', (data) => {
+                    let retries = 0;
+                    const maxRetries = 3;
+
+                    const tryRedirect = () => {
+                        if (retries >= maxRetries) return;
+
+                        @this.call('quizStarted', data)
+                            .catch(() => {
+                                retries++;
+                                setTimeout(tryRedirect, 1000);
+                            });
+                    };
+
+                    tryRedirect();
+                });
         });
 
         function copyCode(event) {

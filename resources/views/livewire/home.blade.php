@@ -61,6 +61,54 @@
                     </div>
                 @endif
 
+                <!-- In Progress Quiz Card -->
+                @if (!empty($inProgressQuiz))
+                    <div
+                        class="bg-gradient-to-r from-orange-500 to-amber-600 rounded-2xl shadow-xl overflow-hidden transform hover:scale-[1.02] transition-all duration-300">
+                        <div class="relative p-6 lg:p-8">
+                            <!-- Animated Background Pattern -->
+                            <div class="absolute inset-0 opacity-10">
+                                <div
+                                    class="absolute top-0 left-0 w-32 h-32 bg-white rounded-full -translate-x-16 -translate-y-16 animate-pulse">
+                                </div>
+                                <div
+                                    class="absolute bottom-0 right-0 w-24 h-24 bg-white rounded-full translate-x-12 translate-y-12 animate-pulse">
+                                </div>
+                            </div>
+
+                            <div class="relative flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+                                <div class="flex items-start gap-4">
+                                    <div class="bg-white/20 backdrop-blur-sm rounded-xl p-3 animate-bounce">
+                                        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                        </svg>
+                                    </div>
+                                    <div class="text-white">
+                                        <div class="flex items-center gap-2 mb-1">
+                                            <h3 class="text-lg font-bold">Quiz in Progress</h3>
+                                            <span class="bg-white/30 text-xs px-2 py-1 rounded-full font-medium animate-pulse">LIVE</span>
+                                        </div>
+                                        <p class="text-2xl font-bold mb-1">{{ $inProgressQuiz->lobby_name }}</p>
+                                        <p class="text-orange-100 text-sm">You have an ongoing quiz session</p>
+                                    </div>
+                                </div>
+
+                                <div class="flex flex-col sm:flex-row gap-3">
+                                    <a href="{{ $this->getInProgressQuizUrl() }}" wire:navigate
+                                        class="bg-white text-orange-600 px-6 py-3 rounded-xl font-semibold hover:bg-orange-50 transform hover:scale-105 transition-all duration-200 shadow-lg flex items-center gap-2 justify-center text-center no-underline">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M11 15l-3-3m0 0l3-3m-3 3h8M3 12a9 9 0 1118 0 9 9 0 01-18 0z"></path>
+                                        </svg>
+                                        Continue Quiz
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                @endif
+
                 <!-- Hosted Quiz Card -->
                 @if (!empty($hostedQuiz))
                     <div

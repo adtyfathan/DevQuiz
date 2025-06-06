@@ -2,9 +2,12 @@
 
 namespace App\Models;
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\User;
 use App\Models\MultiplayerPlayer;
+use App\Models\CompletedQuiz;
+use App\Models\PlayerAnswer;
 
 class MultiplayerQuiz extends Model
 {
@@ -35,4 +38,20 @@ class MultiplayerQuiz extends Model
     {
         return $this->hasMany(MultiplayerPlayer::class, 'multiplayer_quiz_id');
     }
+
+    public function playerData()
+    {
+        return $this->hasOne(MultiplayerPlayer::class, 'multiplayer_quiz_id')
+            ->where('player_id', Auth::user()->id);
+    }
+
+    public function completedQuiz()
+    {
+        return $this->hasMany(CompletedQuiz::class, 'multiplayer_quiz_id');
+    }
+
+    public function playerAnswers()
+    {
+        return $this->hasMany(PlayerAnswer::class, 'multiplayer_quiz_id');
+    } 
 }
