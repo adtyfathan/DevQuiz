@@ -8,6 +8,8 @@ use App\Models\MultiplayerPlayer;
 use App\Models\Question;
 use App\Jobs\BroadcastQuestion;
 use App\Jobs\BroadcastStandings;
+use App\Models\CompletedQuiz;
+use App\Models\PlayerAnswer;
 use Exception;
 
 class QuestionSchedulerService
@@ -22,13 +24,33 @@ class QuestionSchedulerService
     {
         try {
             $quiz = $this->loadQuizWithPlayers($quiz);
+            $players = $quiz->multiplayerPlayer;
+
             $questions = $this->quizService->fetchQuestions(
                 $quiz->category, 
                 $quiz->difficulty, 
                 $quiz->total_questions
             );
 
-            $startTime = now()->addSeconds(5);
+            $startTime = now()->addSeconds(3);
+
+            foreach ($players as $player) {
+                $player->update([
+                    'status' => 'in_progress'
+                ]);
+
+                CompletedQuiz::create([
+                    'quiz_type' => 'multiplayer',
+                    'user_id' => $player->player_id,
+                    'multiplayer_quiz_id' => $quiz->id,
+                    'single_player_quiz_id' => null,
+                    'score' => 0,
+                    'true_answer_count' => 0,
+                    'category' => $quiz->category,
+                    'difficulty' => $quiz->difficulty,
+                    'completed_at' => null
+                ]);
+            }
             
             foreach ($questions as $index => $question) {
                 Question::firstOrCreate(
@@ -43,6 +65,17 @@ class QuestionSchedulerService
                         'explanation' => $question['explanation']
                     ]
                 );
+
+                foreach ($players as $player) {
+                    PlayerAnswer::create([
+                        'player_id' => $player->player_id,
+                        'question_id' => $question['id'],
+                        'multiplayer_quiz_id' => $quiz->id,
+                        'singleplayer_quiz_id' => null,
+                        'quiz_type' => 'multiplayer',
+                        'answer' => null,
+                    ]);
+                }
 
                 $timings = $this->calculateTimings(
                     $startTime, 

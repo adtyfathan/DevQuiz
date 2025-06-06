@@ -17,7 +17,9 @@ class PlayerAnswer extends Model
         'multiplayer_quiz_id',
         'singleplayer_quiz_id',
         'quiz_type',
-        'answer'
+        'answer',
+        'is_correct',
+        'point'
     ];
 
     public function user()

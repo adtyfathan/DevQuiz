@@ -167,7 +167,7 @@
                         const isTrue = this.checkAnswer(correctAnswer, userAnswer);
 
                         let correctPoint = 0;
-                        let bonusPoint = this.countdown * 10;
+                        let bonusPoint = this.countdown * 0.1;
 
                         if (isTrue) correctPoint = 100 + bonusPoint;
 
@@ -231,16 +231,12 @@
                 setTimeout(() => {
                     this.startTimer(event.standingsAt, 10);
                     this.displaySection("standings", () => {
-                        this.renderStandings(event.players);
-                        
-                        // If this is the last standings sequence
-                        if (event.isLast) {
-
-                            setTimeout(() => {
-                                this.displaySection("result", () => {
-                                    this.renderFinalResults(event.players, event.category, event.difficulty);
-                                });
-                            }, 10000); 
+                        if(event.isLast == false){
+                            this.renderStandings(event.players);
+                        } else {
+                            this.displaySection("result", () => {
+                                this.renderFinalResults(event.players, event.category, event.difficulty);
+                            });
                         }
                     });
                 }, standingsDelay);
