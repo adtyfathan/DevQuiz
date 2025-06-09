@@ -33,7 +33,7 @@
                         </div>
                     </div>
 
-                    @if (!empty($completedQuizzes))
+                    @if ($completedQuizzes->count() > 0)
                         <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
                             @foreach ($completedQuizzes as $completedQuiz)
                                 <div class="group bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100 hover:border-gray-200">
@@ -137,7 +137,7 @@
                         </div>
                     </div>
 
-                    @if (!empty($hostedQuizzes))
+                    @if ($hostedQuizzes->count() > 0)
                         <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
                             @foreach ($hostedQuizzes as $hostedQuiz)
                                 <div class="group bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100 hover:border-gray-200">

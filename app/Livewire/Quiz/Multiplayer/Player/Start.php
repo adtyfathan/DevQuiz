@@ -18,7 +18,7 @@ class Start extends Component
 
     public function mount($quizId)
     {
-        $this->quiz = MultiplayerQuiz::findOrFail($quizId);
+        $this->quiz = MultiplayerQuiz::find($quizId);
         $this->player = Auth::user();
         $this->playerQuiz = MultiplayerPlayer::where('multiplayer_quiz_id', $this->quiz->id)
             ->where('player_id', $this->player->id)

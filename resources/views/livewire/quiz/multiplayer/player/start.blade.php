@@ -1,28 +1,35 @@
 <div class="bg-gradient-to-br from-indigo-900 via-purple-800 to-pink-700 min-h-screen">
     <!-- Background Pattern -->
     <div class="absolute inset-0 bg-black bg-opacity-20"></div>
-    <div class="absolute inset-0" style="background-image: radial-gradient(circle at 25% 25%, rgba(255,255,255,0.1) 0%, transparent 50%), radial-gradient(circle at 75% 75%, rgba(255,255,255,0.05) 0%, transparent 50%);"></div>
-    
+    <div class="absolute inset-0"
+        style="background-image: radial-gradient(circle at 25% 25%, rgba(255,255,255,0.1) 0%, transparent 50%), radial-gradient(circle at 75% 75%, rgba(255,255,255,0.05) 0%, transparent 50%);">
+    </div>
+
     <div class="relative min-h-screen py-4 px-4">
         <div class="max-w-4xl mx-auto">
             <!-- Header -->
             <div class="text-center mb-6">
                 <h1 class="text-4xl font-bold text-white mb-2 drop-shadow-lg">Multiplayer Quiz</h1>
-                <div id="timer" class="text-2xl font-semibold text-white bg-black bg-opacity-30 rounded-full px-6 py-2 inline-block backdrop-blur-sm border border-white border-opacity-20"></div>
+                <div id="timer"
+                    class="text-2xl font-semibold text-white bg-black bg-opacity-30 rounded-full px-6 py-2 inline-block backdrop-blur-sm border border-white border-opacity-20">
+                </div>
             </div>
 
             <!-- Main Container -->
-            <div class="bg-white bg-opacity-95 backdrop-blur-sm rounded-3xl shadow-2xl overflow-hidden border border-white border-opacity-30">
-                
+            <div
+                class="bg-white bg-opacity-95 backdrop-blur-sm rounded-3xl shadow-2xl overflow-hidden border border-white border-opacity-30">
+
                 <!-- Loading Container (for mid-game joins) -->
                 <div id="loading-container" class="py-16 text-center">
                     <div class="flex flex-col items-center space-y-6">
                         <div class="space-y-2">
-                            <p class="text-gray-600">Waiting for the next question</p>
+                            <p class="text-gray-600">Waiting for next section</p>
                             <div class="flex justify-center space-x-1 mt-4">
                                 <div class="w-2 h-2 bg-indigo-600 rounded-full animate-bounce"></div>
-                                <div class="w-2 h-2 bg-indigo-600 rounded-full animate-bounce" style="animation-delay: 0.1s"></div>
-                                <div class="w-2 h-2 bg-indigo-600 rounded-full animate-bounce" style="animation-delay: 0.2s"></div>
+                                <div class="w-2 h-2 bg-indigo-600 rounded-full animate-bounce"
+                                    style="animation-delay: 0.1s"></div>
+                                <div class="w-2 h-2 bg-indigo-600 rounded-full animate-bounce"
+                                    style="animation-delay: 0.2s"></div>
                             </div>
                         </div>
                     </div>
@@ -44,12 +51,13 @@
                             <h3 class="text-2xl font-bold text-gray-800 mb-4 leading-relaxed"></h3>
                             <div class="flex justify-center items-center space-x-2 text-sm text-gray-500">
                                 <span>Question</span>
-                                <span id="question-counter" class="bg-indigo-100 text-indigo-800 px-2 py-1 rounded-md font-semibold">1</span>
+                                <span id="question-counter"
+                                    class="bg-indigo-100 text-indigo-800 px-2 py-1 rounded-md font-semibold">1</span>
                             </div>
                         </div>
-                        
+
                         <div id="answers" class="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-4xl mx-auto"></div>
-                        
+
                         <div class="text-center text-sm text-gray-500 mt-6">
                             <p>⚡ Faster answers get bonus points!</p>
                         </div>
@@ -72,7 +80,7 @@
                         <h2 class="text-3xl font-bold text-gray-800 mb-2">🏆 Leaderboard</h2>
                         <p class="text-gray-600">Current standings</p>
                     </div>
-                    
+
                     <div class="max-w-2xl mx-auto">
                         <div id="standings-list" class="space-y-3"></div>
                     </div>
@@ -163,11 +171,13 @@
                     const timeoutDuration = {{ $questionDuration }} * 1000;
                     this.startTimer(event.questionAt, {{ $questionDuration }});
                     this.displaySection("quiz", () => this.renderQuestion(event.question));
-                    
+
+                    // Only handle timeout answer if player hasn't answered
                     setTimeout(() => {
                         if (!this.hasAnswered) {
                             @this.call('handlePlayerAnswer', 0, null, false, event.question.id);
                         }
+                        // Don't change section here - let meme phase handle the transition
                     }, timeoutDuration);
                 }, delay);
             },
@@ -176,12 +186,12 @@
                 setTimeout(() => {
                     this.startTimer(event.memeAt, 5);
                     this.displaySection("meme");
-                    const randomNumber = this.randomIntFromInterval(1,5);
+                    const randomNumber = this.randomIntFromInterval(1, 5);
                     document.getElementById("meme-image").src = "{{ asset('images/meme-') }}" + this.answerState + "-" + randomNumber + ".jpeg";
                 }, delay);
             },
 
-            randomIntFromInterval(min, max) { 
+            randomIntFromInterval(min, max) {
                 return Math.floor(Math.random() * (max - min + 1) + min);
             },
 
@@ -216,13 +226,13 @@
                 document.querySelectorAll(".answer-option").forEach(option => {
                     option.addEventListener("click", () => {
                         if (this.hasAnswered) return;
-                        
+
                         this.hasAnswered = true;
                         const userAnswer = option.dataset.value;
                         const correctAnswer = this.getCorrectAnswer(question.correct_answers);
 
                         this.showAnswerFeedback(option, correctAnswer, userAnswer);
-                        
+
                         const isCorrect = this.checkAnswer(correctAnswer, userAnswer);
                         let correctPoint = 0;
                         let bonusPoint = this.countdown * 0.1;
@@ -233,6 +243,9 @@
                         }
 
                         @this.call('handlePlayerAnswer', correctPoint, userAnswer, isCorrect, question.id);
+
+                        // Stay on quiz section - don't change view here
+                        // The meme phase will handle the transition based on the scheduled timing
                     });
                 });
             },
@@ -241,7 +254,7 @@
                 document.querySelectorAll(".answer-option").forEach(option => {
                     option.disabled = true;
                     option.style.pointerEvents = 'none';
-                    
+
                     const optionValue = option.dataset.value;
                     if (optionValue === correctAnswer) {
                         // Correct answer styling
@@ -298,7 +311,7 @@
             updateTimerDisplay(timeLeft, totalDuration) {
                 const percentage = (timeLeft / totalDuration) * 100;
                 this.timerText.textContent = `⏱️ ${timeLeft}s`;
-                
+
                 // Add warning styling when time is running out
                 if (percentage <= 20) {
                     this.timerText.className = 'text-2xl font-semibold text-red-400 bg-black bg-opacity-30 rounded-full px-6 py-2 inline-block backdrop-blur-sm border border-red-400 border-opacity-50 animate-pulse';
@@ -393,4 +406,3 @@
         quiz.init();
     </script>
     @endscript
-</div>

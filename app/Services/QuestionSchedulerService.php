@@ -32,7 +32,7 @@ class QuestionSchedulerService
                 $quiz->total_questions
             );
 
-            $startTime = now()->addSeconds(6);
+            $startTime = now()->addSeconds(7);
 
             foreach ($players as $player) {
                 $player->update([
