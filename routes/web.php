@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Livewire\Home;
 use App\Livewire\Profile;
 use App\Livewire\History;
+use App\Livewire\AboutUs;
 
 // Host
 use App\Livewire\Quiz\Multiplayer\Host\Lobby as HostLobby;
@@ -22,6 +23,9 @@ Route::middleware(['auth'])->group(function(){
     Route::get('profile', Profile::class)->name('profile');
 
     Route::get('history', History::class)->name('history');
+
+    Route::get('about-us', AboutUs::class)->name('about');
+
     
     Route::prefix('quiz')->name('quiz')->group(function(){
         Route::prefix('singleplayer')->name('.singleplayer')->group(function(){
