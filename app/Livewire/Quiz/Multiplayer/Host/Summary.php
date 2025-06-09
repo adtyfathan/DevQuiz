@@ -8,6 +8,8 @@ use Livewire\Component;
 use App\Models\CompletedQuiz;
 use App\Models\MultiplayerPlayer;
 use App\Models\MultiplayerQuiz;
+use App\Exports\MultiplayerQuizExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class Summary extends Component
 {
@@ -74,6 +76,14 @@ class Summary extends Component
         $this->averagePoints = $totalPoints / $this->completedQuizzes->count();
 
         $this->averageAccuracy = $totalAccuracy / $this->completedQuizzes->count();
+    }
+
+    public function downloadSummary()
+    {
+        $lobbyName = MultiplayerQuiz::find($this->multiplayerQuizId)->lobby_name;
+        $filename = $lobbyName . '.xlsx';
+
+        return Excel::download(new MultiplayerQuizExport($this->multiplayerQuizId), $filename);
     }
     
     #[Layout('layouts.app')] 
