@@ -8,6 +8,8 @@ use Livewire\Component;
 use App\Models\CompletedQuiz;
 use App\Models\MultiplayerQuiz;
 
+use function PHPUnit\Framework\isEmpty;
+
 class Summary extends Component
 {
     public $playerId;
@@ -23,7 +25,7 @@ class Summary extends Component
     public function mount($completedQuizId)
     {
         $this->playerId = Auth::user()->id;
-        
+
         $this->completedQuiz = CompletedQuiz::with([
             'multiplayerQuiz.playerData',
             'multiplayerQuiz.multiplayerPlayer',
@@ -34,9 +36,9 @@ class Summary extends Component
             }
         ])->findOrFail($completedQuizId);
 
-        if($this->completedQuiz->user_id !== $this->playerId) abort(403, 'You are not authorized to view this summary.');
-        
         if(!$this->completedQuiz) abort(404, 'Summary not found.');
+
+        if($this->completedQuiz->user_id !== $this->playerId) abort(403, 'You are not authorized to view this summary.');
         
         $this->getSummaryData();
     }
@@ -58,7 +60,6 @@ class Summary extends Component
 
         // player answers
         $this->playerAnswers = $this->completedQuiz->multiplayerQuiz->playerAnswers;
-
     }
 
 

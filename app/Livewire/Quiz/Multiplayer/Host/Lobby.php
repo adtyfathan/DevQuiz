@@ -80,6 +80,18 @@ class Lobby extends Component
         // tambah kode buat notify kuis mulai
     }
 
+    public function quizEnded()
+    {
+        $quiz = MultiplayerQuiz::find($this->quiz->id);
+
+        if ($quiz && $quiz->status === 'finished') {
+            $this->redirect(
+                route('quiz.multiplayer.host.summary', ['completedQuizId' => $quiz->id]), 
+                navigate: true
+            );
+        }
+    }
+
     #[Layout('layouts.app')] 
     public function render()
     {

@@ -22,7 +22,7 @@
                     </a>
 
                     <!-- Delete Button -->
-                    <button wire:click="deleteLobby"
+                    <button wire:click="deleteLobby" {{ $quiz->status === 'in_progress' ? 'disabled' : '' }}
                         wire:confirm="Are you sure you want to delete this lobby?"
                         class="inline-flex items-center px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-medium rounded-lg transition-colors duration-200 shadow-sm hover:shadow-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2">
                         <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -33,7 +33,7 @@
                         Delete Lobby
                     </button>
 
-                    <button wire:click="startQuiz"
+                    <button wire:click="startQuiz" {{ $quiz->status !== 'waiting' ? 'disabled' : '' }}
                         class="inline-flex items-center px-4 py-2 bg-green-600 hover:bg-green-700 text-white font-medium rounded-lg transition-colors duration-200 shadow-sm hover:shadow-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2">
                         Start Quiz
                     </button>
@@ -47,7 +47,7 @@
                             {{ $quiz->lobby_code }}
                         </p>
                     </div>
-                    <button onclick="copyCode(event)"
+                    <button type="button" id="copyButton"
                         class="inline-flex items-center px-3 py-2 text-sm font-medium text-indigo-600 hover:text-white hover:bg-indigo-600 border border-indigo-600 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
                         <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -96,15 +96,27 @@
                     </div>
                 </div>
 
+                @if ($quiz->status === 'in_progress')
+                    <div class="mb-6">
+                        <h2 class="text-lg font-semibold text-gray-800 mb-4">Quiz Status</h2>
+                        <div
+                            class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-yellow-100 text-yellow-800">
+                            {{ ucfirst($quiz->status) }}
+                        </div>
+                    </div>
+
+                @endif
+
                 <!-- Players -->
                 <div>
                     <div class="flex items-center justify-between mb-4">
                         <h2 class="text-lg font-semibold text-gray-800">Players Joined</h2>
-                        <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800">
+                        <span
+                            class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800">
                             {{ count($players) }} {{ count($players) === 1 ? 'Player' : 'Players' }}
                         </span>
                     </div>
-                
+
                     @if(count($players) > 0)
                         <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
                             @foreach ($players as $index => $player)
@@ -122,7 +134,8 @@
                         </div>
                     @else
                         <div class="text-center py-8 text-gray-500">
-                            <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z">
                                 </path>
@@ -136,71 +149,118 @@
         </div>
     </div>
 
+    @script
     <script>
-        document.addEventListener('livewire:initialized', () => {
-            Echo.private('quiz-lobby.{{ $quiz->lobby_code }}')
-                .listen('PlayerJoinedLobby', (data) => {
-                    @this.call('playerChanged', data);
-                })
-                .listen('PlayerLeaveLobby', (data) => {
-                    @this.call('playerChanged', data);
+        const lobby = {
+            init() {
+                document.addEventListener('livewire:initialized', () => {
+                    this.initializeEventListeners();
+                    this.initializeCopyButton();
                 });
-        });
+            },
 
-        function copyCode(event) {
-            const code = document.getElementById('lobbyCode').innerText.trim();
-            navigator.clipboard.writeText(code).then(function () {
-                const button = event.target.closest('button');
-                const originalText = button.innerHTML;
-                button.innerHTML = `
-                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                </svg>
-                Copied!
-            `;
-                button.classList.add('bg-green-600', 'text-white', 'border-green-600');
-                button.classList.remove('text-indigo-600', 'hover:text-white', 'hover:bg-indigo-600', 'border-indigo-600');
+            initializeEventListeners() {
+                Echo.private('quiz-lobby.{{ $quiz->lobby_code }}')
+                    .listen('PlayerJoinedLobby', (data) => {
+                        @this.call('playerChanged', data);
+                    })
+                    .listen('PlayerLeaveLobby', (data) => {
+                        @this.call('playerChanged', data);
+                    });
+                Echo.private('quiz-ended.{{ $quiz->id }}')
+                    .listen('QuizEnded', (data) => {
+                        @this.call('quizEnded', data);
+                    });
+            },
 
-                setTimeout(() => {
-                    button.innerHTML = originalText;
-                    button.classList.remove('bg-green-600', 'text-white', 'border-green-600');
-                    button.classList.add('text-indigo-600', 'hover:text-white', 'hover:bg-indigo-600', 'border-indigo-600');
-                }, 2000);
-            }).catch(function (err) {
-                // Fallback for older browsers
-                console.error('Could not copy text: ', err);
+            initializeCopyButton() {
+                const copyButton = document.getElementById('copyButton');
+                if (copyButton) {
+                    copyButton.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        this.copyCode(copyButton);
+                    });
+                }
+            },
 
-                // Create a temporary textarea for fallback
-                const textArea = document.createElement('textarea');
-                textArea.value = code;
-                document.body.appendChild(textArea);
-                textArea.focus();
-                textArea.select();
+            async copyCode(button) {
+                const codeElement = document.getElementById('lobbyCode');
+                if (!codeElement) {
+                    console.error('Lobby code element not found');
+                    return;
+                }
+
+                const code = codeElement.textContent.trim();
 
                 try {
-                    document.execCommand('copy');
-                    const button = event.target.closest('button');
-                    const originalText = button.innerHTML;
-                    button.innerHTML = `
+                    // Try modern clipboard API first
+                    if (navigator.clipboard && window.isSecureContext) {
+                        await navigator.clipboard.writeText(code);
+                        this.showCopySuccess(button);
+                    } else {
+                        // Fallback for older browsers or non-secure contexts
+                        this.fallbackCopyToClipboard(code, button);
+                    }
+                } catch (err) {
+                    console.error('Copy failed, trying fallback:', err);
+                    this.fallbackCopyToClipboard(code, button);
+                }
+            },
+
+            showCopySuccess(button) {
+                const originalHTML = button.innerHTML;
+                const originalClasses = button.className;
+
+                // Update button to show success
+                button.innerHTML = `
                     <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                     </svg>
                     Copied!
                 `;
-                    button.classList.add('bg-green-600', 'text-white', 'border-green-600');
-                    button.classList.remove('text-indigo-600', 'hover:text-white', 'hover:bg-indigo-600', 'border-indigo-600');
 
-                    setTimeout(() => {
-                        button.innerHTML = originalText;
-                        button.classList.remove('bg-green-600', 'text-white', 'border-green-600');
-                        button.classList.add('text-indigo-600', 'hover:text-white', 'hover:bg-indigo-600', 'border-indigo-600');
-                    }, 2000);
-                } catch (fallbackErr) {
-                    console.error('Fallback copy failed: ', fallbackErr);
+                // Update classes for success state
+                button.className = button.className
+                    .replace('text-indigo-600', 'text-white')
+                    .replace('hover:text-white', '')
+                    .replace('hover:bg-indigo-600', '')
+                    .replace('border-indigo-600', 'border-green-600') + ' bg-green-600';
+
+                // Reset after 2 seconds
+                setTimeout(() => {
+                    button.innerHTML = originalHTML;
+                    button.className = originalClasses;
+                }, 2000);
+            },
+
+            fallbackCopyToClipboard(text, button) {
+                const textArea = document.createElement('textarea');
+                textArea.value = text;
+                textArea.style.position = 'fixed';
+                textArea.style.left = '-999999px';
+                textArea.style.top = '-999999px';
+                document.body.appendChild(textArea);
+
+                textArea.focus();
+                textArea.select();
+
+                try {
+                    const successful = document.execCommand('copy');
+                    if (successful) {
+                        this.showCopySuccess(button);
+                    } else {
+                        console.error('Fallback copy command failed');
+                    }
+                } catch (err) {
+                    console.error('Fallback copy failed:', err);
+                } finally {
+                    document.body.removeChild(textArea);
                 }
+            }
+        };
 
-                document.body.removeChild(textArea);
-            });
-        }
+        lobby.init();
     </script>
+    @endscript
 </div>

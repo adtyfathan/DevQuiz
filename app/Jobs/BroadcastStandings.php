@@ -11,6 +11,9 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use PhpParser\Node\Expr\AssignOp\Mul;
+use App\Events\QuizEnded;
+use App\Models\CompletedQuiz;
+use App\Models\PlayerAnswer;
 
 class BroadcastStandings implements ShouldQueue
 {
@@ -37,11 +40,13 @@ class BroadcastStandings implements ShouldQueue
                 'status' => 'finished', 
                 'finished_at' => now()
             ]);
+
+            broadcast(new QuizEnded($this->quiz));
         }
 
         broadcast(new StandingsUpdated(
             $this->quiz, 
-            $this->players, 
+            $this->players,
             $this->standingsAt, 
             isLast: $this->isLast, 
             category: $this->category, 

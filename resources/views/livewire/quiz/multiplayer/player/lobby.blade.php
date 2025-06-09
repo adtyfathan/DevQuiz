@@ -24,7 +24,7 @@
                             {{ $quiz->lobby_code }}
                         </p>
                     </div>
-                    <button onclick="copyCode(event)"
+                    <button type="button" id="copyButton"
                         class="inline-flex items-center px-3 py-2 text-sm font-medium text-indigo-600 hover:text-white hover:bg-indigo-600 border border-indigo-600 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
                         <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -115,88 +115,116 @@
         </div>
     </div>
 
+    @script
     <script>
-        document.addEventListener('livewire:initialized', () => {
-            Echo.private('quiz-lobby.{{ $quiz->lobby_code }}')
-                .listen('PlayerJoinedLobby', (data) => {
-                    @this.call('playerChanged', data);
-                })
-                .listen('PlayerLeaveLobby', (data) => {
-                    @this.call('playerChanged', data);
-                });
-            Echo.private('multiplayer.{{ $quiz->id }}')
-                .listen('QuizStarted', (data) => {
-                    let retries = 0;
-                    const maxRetries = 3;
+        const lobby = {
+            init() {
+                this.initializeEventListeners();
+                this.initializeCopyButton();
+            },
 
-                    const tryRedirect = () => {
-                        if (retries >= maxRetries) return;
+            initializeEventListeners() {
+                Echo.private('quiz-lobby.{{ $quiz->lobby_code }}')
+                    .listen('PlayerJoinedLobby', (data) => {
+                        @this.call('playerChanged', data);
+                    })
+                    .listen('PlayerLeaveLobby', (data) => {
+                        @this.call('playerChanged', data);
+                    });
+                Echo.private('multiplayer.{{ $quiz->id }}')
+                    .listen('QuizStarted', (data) => {
+                        @this.call('quizStarted', data);
+                    });
+            },
 
-                        @this.call('quizStarted', data)
-                            .catch(() => {
-                                retries++;
-                                setTimeout(tryRedirect, 1000);
-                            });
-                    };
+            initializeCopyButton() {
+                const copyButton = document.getElementById('copyButton');
+                if (copyButton) {
+                    copyButton.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        this.copyCode(copyButton);
+                    });
+                }
+            },
 
-                    tryRedirect();
-                });
-        });
+            async copyCode(button) {
+                const codeElement = document.getElementById('lobbyCode');
+                if (!codeElement) {
+                    console.error('Lobby code element not found');
+                    return;
+                }
 
-        function copyCode(event) {
-            const code = document.getElementById('lobbyCode').innerText.trim();
-            navigator.clipboard.writeText(code).then(function () {
-                const button = event.target.closest('button');
-                const originalText = button.innerHTML;
+                const code = codeElement.textContent.trim();
+
+                try {
+                    // Try modern clipboard API first
+                    if (navigator.clipboard && window.isSecureContext) {
+                        await navigator.clipboard.writeText(code);
+                        this.showCopySuccess(button);
+                    } else {
+                        // Fallback for older browsers or non-secure contexts
+                        this.fallbackCopyToClipboard(code, button);
+                    }
+                } catch (err) {
+                    console.error('Copy failed, trying fallback:', err);
+                    this.fallbackCopyToClipboard(code, button);
+                }
+            },
+
+            showCopySuccess(button) {
+                const originalHTML = button.innerHTML;
+                const originalClasses = button.className;
+
+                // Update button to show success
                 button.innerHTML = `
                     <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                     </svg>
                     Copied!
                 `;
-                button.classList.add('bg-green-600', 'text-white', 'border-green-600');
-                button.classList.remove('text-indigo-600', 'hover:text-white', 'hover:bg-indigo-600', 'border-indigo-600');
 
+                // Update classes for success state
+                button.className = button.className
+                    .replace('text-indigo-600', 'text-white')
+                    .replace('hover:text-white', '')
+                    .replace('hover:bg-indigo-600', '')
+                    .replace('border-indigo-600', 'border-green-600') + ' bg-green-600';
+
+                // Reset after 2 seconds
                 setTimeout(() => {
-                    button.innerHTML = originalText;
-                    button.classList.remove('bg-green-600', 'text-white', 'border-green-600');
-                    button.classList.add('text-indigo-600', 'hover:text-white', 'hover:bg-indigo-600', 'border-indigo-600');
+                    button.innerHTML = originalHTML;
+                    button.className = originalClasses;
                 }, 2000);
-            }).catch(function (err) {
-                // Fallback for older browsers
-                console.error('Could not copy text: ', err);
+            },
 
-                // Create a temporary textarea for fallback
+            fallbackCopyToClipboard(text, button) {
                 const textArea = document.createElement('textarea');
-                textArea.value = code;
+                textArea.value = text;
+                textArea.style.position = 'fixed';
+                textArea.style.left = '-999999px';
+                textArea.style.top = '-999999px';
                 document.body.appendChild(textArea);
+
                 textArea.focus();
                 textArea.select();
 
                 try {
-                    document.execCommand('copy');
-                    const button = event.target.closest('button');
-                    const originalText = button.innerHTML;
-                    button.innerHTML = `
-                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                        </svg>
-                        Copied!
-                    `;
-                    button.classList.add('bg-green-600', 'text-white', 'border-green-600');
-                    button.classList.remove('text-indigo-600', 'hover:text-white', 'hover:bg-indigo-600', 'border-indigo-600');
-
-                    setTimeout(() => {
-                        button.innerHTML = originalText;
-                        button.classList.remove('bg-green-600', 'text-white', 'border-green-600');
-                        button.classList.add('text-indigo-600', 'hover:text-white', 'hover:bg-indigo-600', 'border-indigo-600');
-                    }, 2000);
-                } catch (fallbackErr) {
-                    console.error('Fallback copy failed: ', fallbackErr);
+                    const successful = document.execCommand('copy');
+                    if (successful) {
+                        this.showCopySuccess(button);
+                    } else {
+                        console.error('Fallback copy command failed');
+                    }
+                } catch (err) {
+                    console.error('Fallback copy failed:', err);
+                } finally {
+                    document.body.removeChild(textArea);
                 }
+            }
+        };
 
-                document.body.removeChild(textArea);
-            });
-        }
+        lobby.init();
     </script>
+    @endscript
 </div>
