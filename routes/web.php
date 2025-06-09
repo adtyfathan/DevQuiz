@@ -8,13 +8,12 @@ use App\Livewire\Profile;
 use App\Livewire\Quiz\Multiplayer\Host\Lobby as HostLobby;
 use App\Livewire\Quiz\Multiplayer\Host\Create as CreateLobby;
 use App\Livewire\Quiz\Multiplayer\Host\Edit as EditLobby;
+use App\Livewire\Quiz\Multiplayer\Host\Summary as HostSummary;
 
 // Player
 use App\Livewire\Quiz\Multiplayer\Player\Lobby as PlayerLobby;
 use App\Livewire\Quiz\Multiplayer\Player\Start as QuizStart;
 use App\Livewire\Quiz\Multiplayer\Player\Summary as PlayerSummary;
-
-
 
 Route::middleware(['auth'])->group(function(){
     Route::get('/', Home::class)->name('home');
@@ -36,7 +35,8 @@ Route::middleware(['auth'])->group(function(){
             Route::prefix('host')->name('.host')->group(function(){
                 Route::get('lobby/{lobbyCode}', HostLobby::class)->name('.lobby');
                 Route::get('create', CreateLobby::class)->name('.create');
-                Route::get('edit/{lobbyId}', EditLobby::class)->name('.edit');
+                Route::get('edit/{lobbyId}', action: EditLobby::class)->name('.edit');
+                Route::get('summary/{multiplayerQuizId}', HostSummary::class)->name('.summary');
             });
         });
     });

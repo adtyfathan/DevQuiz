@@ -42,6 +42,7 @@ class QuestionSchedulerService
                 CompletedQuiz::create([
                     'quiz_type' => 'multiplayer',
                     'user_id' => $player->player_id,
+                    'multiplayer_player_id' => $player->id,
                     'multiplayer_quiz_id' => $quiz->id,
                     'single_player_quiz_id' => null,
                     'score' => 0,

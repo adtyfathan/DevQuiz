@@ -1,55 +1,93 @@
-<div class="min-h-screen bg-gray-100 py-6 flex flex-col justify-center sm:py-12">
-    <div class="relative py-3 sm:max-w-xl sm:mx-auto">
-        <div class="relative px-4 py-10 bg-white mx-8 md:mx-0 shadow rounded-3xl sm:p-10">
-            <div class="max-w-md mx-auto">
-                <div class="divide-y divide-gray-200">
-                    <h1 class="text-2xl font-bold mb-5 text-center">Multiplayer Quiz</h1>
-                    
-                    <div class="text-center py-4">
-                        <h2 id="timer" class="text-xl font-semibold text-indigo-600"></h2>
-                    </div>
+<div class="bg-gradient-to-br from-indigo-900 via-purple-800 to-pink-700 min-h-screen">
+    <!-- Background Pattern -->
+    <div class="absolute inset-0 bg-black bg-opacity-20"></div>
+    <div class="absolute inset-0" style="background-image: radial-gradient(circle at 25% 25%, rgba(255,255,255,0.1) 0%, transparent 50%), radial-gradient(circle at 75% 75%, rgba(255,255,255,0.05) 0%, transparent 50%);"></div>
+    
+    <div class="relative min-h-screen py-4 px-4">
+        <div class="max-w-4xl mx-auto">
+            <!-- Header -->
+            <div class="text-center mb-6">
+                <h1 class="text-4xl font-bold text-white mb-2 drop-shadow-lg">Multiplayer Quiz</h1>
+                <div id="timer" class="text-2xl font-semibold text-white bg-black bg-opacity-30 rounded-full px-6 py-2 inline-block backdrop-blur-sm border border-white border-opacity-20"></div>
+            </div>
 
-                    <!-- Opening Container -->
-                    <div id="opening-container" class="hidden py-8 text-center">
-                        <div class="animate-bounce">
-                            <h2 class="text-2xl font-bold text-gray-800"></h2>
+            <!-- Main Container -->
+            <div class="bg-white bg-opacity-95 backdrop-blur-sm rounded-3xl shadow-2xl overflow-hidden border border-white border-opacity-30">
+                
+                <!-- Loading Container (for mid-game joins) -->
+                <div id="loading-container" class="py-16 text-center">
+                    <div class="flex flex-col items-center space-y-6">
+                        <div class="relative">
+                            <div class="w-24 h-24 border-4 border-indigo-200 border-t-indigo-600 rounded-full animate-spin"></div>
+                            <div class="absolute inset-0 flex items-center justify-center">
+                                <div class="w-12 h-12 bg-indigo-600 rounded-full animate-pulse"></div>
+                            </div>
+                        </div>
+                        <div class="space-y-2">
+                            <h2 class="text-2xl font-bold text-gray-800">Joining Quiz...</h2>
+                            <p class="text-gray-600">Waiting for the next question</p>
+                            <div class="flex justify-center space-x-1 mt-4">
+                                <div class="w-2 h-2 bg-indigo-600 rounded-full animate-bounce"></div>
+                                <div class="w-2 h-2 bg-indigo-600 rounded-full animate-bounce" style="animation-delay: 0.1s"></div>
+                                <div class="w-2 h-2 bg-indigo-600 rounded-full animate-bounce" style="animation-delay: 0.2s"></div>
+                            </div>
                         </div>
                     </div>
-
-                    <!-- Quiz Container -->
-                    <div id="quiz-container" class="hidden py-8">
-                        <div class="space-y-4">
-                            <h3 class="text-xl font-semibold text-gray-800"></h3>
-                            <ul id="answers" class="space-y-2"></ul>
-                        </div>
-                    </div>
-
-                    <!-- Meme Container -->
-                    <div id="meme-container" class="hidden py-8 text-center">
-                        <div class="animate-pulse">
-                            <p class="text-lg text-gray-600"></p>
-                        </div>
-                    </div>
-
-                    <!-- Standings Container -->
-                    <div id="standings-container" class="hidden py-8">
-                        <div class="overflow-x-auto">
-                            <table id="standings-table" class="min-w-full">
-                                <thead class="bg-gray-50">
-                                    <tr>
-                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Rank</th>
-                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
-                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Points</th>
-                                    </tr>
-                                </thead>
-                                <tbody class="bg-white divide-y divide-gray-200"></tbody>
-                            </table>
-                        </div>
-                    </div>
-
-                    <!-- Results Container -->
-                    <div id="result-container" class="hidden py-8"></div>
                 </div>
+
+                <!-- Opening Container -->
+                <div id="opening-container" class="hidden py-16 text-center">
+                    <div class="animate-bounce">
+                        <div class="text-6xl mb-4">🚀</div>
+                        <h2 class="text-3xl font-bold text-gray-800 mb-2">Get Ready!</h2>
+                        <p class="text-xl text-gray-600">New question coming up...</p>
+                    </div>
+                </div>
+
+                <!-- Quiz Container -->
+                <div id="quiz-container" class="hidden p-8">
+                    <div class="space-y-6">
+                        <div class="text-center">
+                            <h3 class="text-2xl font-bold text-gray-800 mb-4 leading-relaxed"></h3>
+                            <div class="flex justify-center items-center space-x-2 text-sm text-gray-500">
+                                <span>Question</span>
+                                <span id="question-counter" class="bg-indigo-100 text-indigo-800 px-2 py-1 rounded-md font-semibold">1</span>
+                            </div>
+                        </div>
+                        
+                        <div id="answers" class="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-4xl mx-auto"></div>
+                        
+                        <div class="text-center text-sm text-gray-500 mt-6">
+                            <p>⚡ Faster answers get bonus points!</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Meme Container -->
+                <div id="meme-container" class="hidden py-16 text-center">
+                    <div class="flex flex-col items-center space-y-6">
+                        <div class="text-8xl animate-bounce">😄</div>
+                        <div class="space-y-2">
+                            <p class="text-2xl font-bold text-gray-800">Time for a break!</p>
+                            <p class="text-gray-600">Get ready for the next question</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Standings Container -->
+                <div id="standings-container" class="hidden p-8">
+                    <div class="text-center mb-6">
+                        <h2 class="text-3xl font-bold text-gray-800 mb-2">🏆 Leaderboard</h2>
+                        <p class="text-gray-600">Current standings</p>
+                    </div>
+                    
+                    <div class="max-w-2xl mx-auto">
+                        <div id="standings-list" class="space-y-3"></div>
+                    </div>
+                </div>
+
+                <!-- Results Container -->
+                <div id="result-container" class="hidden p-8"></div>
             </div>
         </div>
     </div>
@@ -60,10 +98,12 @@
             countdown: null,
             hasAnswered: false,
             questionCounter: 0,
+            isWaitingForFirstQuestion: true,
 
             init() {
                 this.initializeEventListeners();
                 this.setupContainers();
+                this.showLoadingIfNeeded();
             },
 
             initializeEventListeners() {
@@ -74,6 +114,7 @@
 
             setupContainers() {
                 this.containers = {
+                    loading: document.getElementById("loading-container"),
                     opening: document.getElementById("opening-container"),
                     quiz: document.getElementById("quiz-container"),
                     meme: document.getElementById("meme-container"),
@@ -83,7 +124,15 @@
                 this.timerText = document.getElementById("timer");
             },
 
+            showLoadingIfNeeded() {
+                // Show loading animation for players joining mid-game
+                if (this.isWaitingForFirstQuestion) {
+                    this.displaySection("loading");
+                }
+            },
+
             handleQuestionEvent(event) {
+                this.isWaitingForFirstQuestion = false;
                 this.questionCounter++;
                 this.hasAnswered = false;
                 const now = new Date();
@@ -112,9 +161,7 @@
             scheduleOpeningPhase(delay, event) {
                 setTimeout(() => {
                     this.startTimer(event.openingAt, 5);
-                    this.displaySection("opening", () => {
-                        this.containers.opening.innerHTML = `<h1>New Questions! Get Ready...</h1>`;
-                    });
+                    this.displaySection("opening");
                 }, delay);
             },
 
@@ -123,6 +170,7 @@
                     const timeoutDuration = {{ $questionDuration }} * 1000;
                     this.startTimer(event.questionAt, {{ $questionDuration }});
                     this.displaySection("quiz", () => this.renderQuestion(event.question));
+                    
                     setTimeout(() => {
                         if (!this.hasAnswered) {
                             @this.call('handlePlayerAnswer', 0, null, false, event.question.id);
@@ -134,46 +182,79 @@
             scheduleMemePhase(delay, event) {
                 setTimeout(() => {
                     this.startTimer(event.memeAt, 5);
-                    this.displaySection("meme", () => {
-                        this.containers.meme.innerHTML = `
-                            <div class="flex flex-col items-center space-y-4">
-                                <p class="text-xl font-semibold text-gray-700">Time for a meme!</p>
-                            </div>
-                        `;
-                    });
+                    this.displaySection("meme");
                 }, delay);
             },
 
             renderQuestion(question) {
+                const colors = [
+                    'from-red-500 to-red-600 hover:from-red-600 hover:to-red-700',
+                    'from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700',
+                    'from-green-500 to-green-600 hover:from-green-600 hover:to-green-700',
+                    'from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700'
+                ];
+
+                const shapes = ['⚪', '🔺', '🟧', '💎'];
+
+                document.querySelector('#quiz-container h3').textContent = question.question;
+                document.getElementById('question-counter').textContent = this.questionCounter;
+
                 const answersHTML = Object.entries(question.answers)
-                    .map(([key, text]) => text ? `
-                        <li>
-                            <input type="radio" name="question" value="${key}" class="answer-option"> ${text}
-                        </li>` : '')
+                    .filter(([key, text]) => text)
+                    .map(([key, text], index) => `
+                        <button class="answer-option group relative p-6 bg-gradient-to-r ${colors[index]} text-white rounded-2xl font-bold text-lg transition-all duration-300 transform hover:scale-105 shadow-lg border-4 border-white border-opacity-30 hover:-translate-y-1 hover:shadow-2xl" 
+                                data-value="${key}">
+                            <div class="flex items-center space-x-4">
+                                <span class="text-3xl">${shapes[index]}</span>
+                                <span class="flex-1 text-left">${text}</span>
+                            </div>
+                            <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-10 rounded-2xl transition-all duration-300"></div>
+                        </button>
+                    `)
                     .join('');
 
-                this.containers.quiz.innerHTML = `
-                    <h3>${question.question}</h3>
-                    <ul id="answers">${answersHTML}</ul>
-                `;
+                document.getElementById('answers').innerHTML = answersHTML;
 
                 document.querySelectorAll(".answer-option").forEach(option => {
-                    option.addEventListener("change", () => {
+                    option.addEventListener("click", () => {
+                        if (this.hasAnswered) return;
+                        
                         this.hasAnswered = true;
-                        const userAnswer = option.value;
+                        const userAnswer = option.dataset.value;
                         const correctAnswer = this.getCorrectAnswer(question.correct_answers);
 
-                        document.querySelectorAll(".answer-option").forEach(input => input.disabled = true);
-                        const isTrue = this.checkAnswer(correctAnswer, userAnswer);
-
+                        this.showAnswerFeedback(option, correctAnswer, userAnswer);
+                        
+                        const isCorrect = this.checkAnswer(correctAnswer, userAnswer);
                         let correctPoint = 0;
                         let bonusPoint = this.countdown * 0.1;
 
-                        if (isTrue) correctPoint = 100 + bonusPoint;
+                        if (isCorrect) correctPoint = 100 + bonusPoint;
 
-                        // Add question ID to the call
-                        @this.call('handlePlayerAnswer', correctPoint, userAnswer, isTrue, question.id);
+                        @this.call('handlePlayerAnswer', correctPoint, userAnswer, isCorrect, question.id);
                     });
+                });
+            },
+
+            showAnswerFeedback(selectedOption, correctAnswer, userAnswer) {
+                document.querySelectorAll(".answer-option").forEach(option => {
+                    option.disabled = true;
+                    option.style.pointerEvents = 'none';
+                    
+                    const optionValue = option.dataset.value;
+                    if (optionValue === correctAnswer) {
+                        // Correct answer styling
+                        option.className = 'answer-option group relative p-6 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-2xl font-bold text-lg transition-all duration-300 transform shadow-lg border-4 border-green-400';
+                        option.innerHTML += '<div class="absolute top-2 right-2 text-2xl">✅</div>';
+                    } else if (optionValue === userAnswer) {
+                        // Incorrect user answer styling
+                        option.className = 'answer-option group relative p-6 bg-gradient-to-r from-red-500 to-red-600 text-white rounded-2xl font-bold text-lg transition-all duration-300 transform shadow-lg border-4 border-red-400 animate-pulse';
+                        option.innerHTML += '<div class="absolute top-2 right-2 text-2xl">❌</div>';
+                    } else {
+                        // Other options styling
+                        option.style.opacity = '0.5';
+                        option.style.transform = 'scale(0.95)';
+                    }
                 });
             },
 
@@ -183,15 +264,7 @@
             },
 
             checkAnswer(correct, selected) {
-                if(correct === selected){
-                    console.log("Benar");
-                    // edit DOM
-                    return true;
-                } else {
-                    console.log(`Salah, jawaban benar ${correct}`);
-                    // edit DOM
-                    return false;
-                }
+                return correct === selected;
             },
 
             displaySection(sectionName, renderCallback) {
@@ -199,7 +272,7 @@
                 Object.keys(this.containers).forEach(name => {
                     this.containers[name].style.display = name === sectionName ? "block" : "none";
                 });
-                renderCallback();
+                if (renderCallback) renderCallback();
             },
 
             startTimer(eventScheduledAt, duration) {
@@ -208,19 +281,31 @@
                 const elapsed = Math.floor((now - scheduledAt) / 1000);
                 let timeLeft = Math.max(0, duration - elapsed);
 
-                console.log(`Starting timer for ${duration} seconds at ${now.toISOString()}`);
-                
                 clearInterval(this.countdown);
-                this.timerText.textContent = `Timer: ${timeLeft}`;
+                this.updateTimerDisplay(timeLeft, duration);
 
                 this.countdown = setInterval(() => {
                     timeLeft--;
-                    this.timerText.textContent = `Timer: ${timeLeft}`;
+                    this.updateTimerDisplay(timeLeft, duration);
                     if (timeLeft <= 0) {
                         clearInterval(this.countdown);
                         console.log(`Timer finished at ${new Date().toISOString()}`);
                     }
                 }, 1000);
+            },
+
+            updateTimerDisplay(timeLeft, totalDuration) {
+                const percentage = (timeLeft / totalDuration) * 100;
+                this.timerText.textContent = `⏱️ ${timeLeft}s`;
+                
+                // Add warning styling when time is running out
+                if (percentage <= 20) {
+                    this.timerText.className = 'text-2xl font-semibold text-red-400 bg-black bg-opacity-30 rounded-full px-6 py-2 inline-block backdrop-blur-sm border border-red-400 border-opacity-50 animate-pulse';
+                } else if (percentage <= 50) {
+                    this.timerText.className = 'text-2xl font-semibold text-yellow-400 bg-black bg-opacity-30 rounded-full px-6 py-2 inline-block backdrop-blur-sm border border-yellow-400 border-opacity-50';
+                } else {
+                    this.timerText.className = 'text-2xl font-semibold text-white bg-black bg-opacity-30 rounded-full px-6 py-2 inline-block backdrop-blur-sm border border-white border-opacity-20';
+                }
             },
 
             handleStandingsEvent(event) {
@@ -231,7 +316,7 @@
                 setTimeout(() => {
                     this.startTimer(event.standingsAt, 10);
                     this.displaySection("standings", () => {
-                        if(event.isLast == false){
+                        if (event.isLast == false) {
                             this.renderStandings(event.players);
                         } else {
                             this.displaySection("result", () => {
@@ -243,34 +328,63 @@
             },
 
             renderStandings(players) {
-                const tableBody = document.querySelector('#standings-table tbody');
-                tableBody.innerHTML = players.map((player, i) => `
-                    <tr>
-                        <td>${i + 1}</td>
-                        <td>${player.username}</td>
-                        <td>${player.point}</td>
-                    </tr>
-                `).join('');
+                const standingsList = document.getElementById('standings-list');
+                const colors = ['bg-gradient-to-r from-yellow-400 to-yellow-500', 'bg-gradient-to-r from-gray-400 to-gray-500', 'bg-gradient-to-r from-orange-400 to-orange-500'];
+                
+                standingsList.innerHTML = players.map((player, index) => {
+                    const bgColor = colors[index] || 'bg-gradient-to-r from-indigo-100 to-indigo-200';
+                    const textColor = index < 3 ? 'text-white' : 'text-gray-800';
+                    const medal = index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : `#${index + 1}`;
+                    
+                    return `
+                        <div class="flex items-center justify-between p-4 ${bgColor} rounded-xl shadow-md transform transition-all duration-300 hover:scale-105">
+                            <div class="flex items-center space-x-4">
+                                <span class="text-2xl font-bold ${textColor}">${medal}</span>
+                                <div>
+                                    <p class="font-semibold ${textColor}">${player.username}</p>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-xl font-bold ${textColor}">${player.point}</p>
+                                <p class="text-sm ${textColor} opacity-75">points</p>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
             },
 
             renderFinalResults(players, category, difficulty) {
                 @this.call('endQuiz');
-                const winner = players[0]; // First player has highest points
+                const winner = players[0];
                 this.containers.result.innerHTML = `
-                    <div class="text-center space-y-6">
-                        <h2 class="text-2xl font-bold text-gray-800">Quiz Complete!</h2>
-                        <div class="bg-yellow-100 p-6 rounded-lg">
-                            <h3 class="text-xl font-semibold text-gray-700 mb-2">Winner</h3>
-                            <p class="text-lg text-gray-600">${winner.username}</p>
-                            <p class="text-2xl font-bold text-yellow-600">${winner.point} points</p>
+                    <div class="text-center space-y-8">
+                        <div class="animate-bounce">
+                            <div class="text-8xl mb-4">🎉</div>
+                            <h2 class="text-4xl font-bold text-gray-800 mb-2">Quiz Complete!</h2>
                         </div>
-                        <div class="mt-4 text-gray-600">
-                            <p>Category: ${category}</p>
-                            <p>Difficulty: ${difficulty}</p>
+                        
+                        <div class="bg-gradient-to-r from-yellow-400 to-yellow-500 p-8 rounded-2xl shadow-xl transform hover:scale-105 transition-all duration-300">
+                            <h3 class="text-2xl font-bold text-white mb-4">🏆 Winner</h3>
+                            <p class="text-3xl font-bold text-white mb-2">${winner.username}</p>
+                            <p class="text-4xl font-bold text-yellow-900">${winner.point} points</p>
                         </div>
+                        
+                        <div class="bg-gray-100 p-6 rounded-xl">
+                            <div class="grid grid-cols-2 gap-4 text-gray-700">
+                                <div>
+                                    <p class="font-semibold">Category</p>
+                                    <p>${category}</p>
+                                </div>
+                                <div>
+                                    <p class="font-semibold">Difficulty</p>
+                                    <p class="capitalize">${difficulty}</p>
+                                </div>
+                            </div>
+                        </div>
+                        
                         <a href="/home" 
-                           class="inline-block mt-4 px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700">
-                            Back to Home
+                           class="inline-block px-8 py-4 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-2xl font-bold text-lg hover:from-indigo-700 hover:to-purple-700 transform hover:scale-105 transition-all duration-300 shadow-lg">
+                            🏠 Back to Home
                         </a>
                     </div>
                 `;
@@ -280,4 +394,3 @@
         quiz.init();
     </script>
     @endscript
-</div>

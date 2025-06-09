@@ -50,6 +50,14 @@ Broadcast::channel('multiplayer.{quizId}', function ($user, $quizId) {
         ->exists();
 });
 
+Broadcast::channel('quiz-ended.{quizId}', function ($user, $quizId) {
+    $quiz = MultiplayerQuiz::find($quizId);
+
+    if (!$quiz) return false;
+
+    return true;
+});
+
 Broadcast::channel('quiz.{quizId}', function ($user, $quizId) {
     $quiz = MultiplayerQuiz::find($quizId);
 
