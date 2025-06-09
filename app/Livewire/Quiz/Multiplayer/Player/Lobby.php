@@ -11,6 +11,7 @@ use App\Models\MultiplayerPlayer;
 
 class Lobby extends Component
 { 
+    
     public $lobbyCode;
     public $quiz;
     public $host;
@@ -54,7 +55,7 @@ class Lobby extends Component
     public function getLobbyData()
     {
         $this->quiz = MultiplayerQuiz::with(
-            'multiplayerPlayer',
+            'multiplayerPlayer.player',
                 'host'
             )
             ->where('lobby_code', $this->lobbyCode)

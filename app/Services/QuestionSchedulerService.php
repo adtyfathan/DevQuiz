@@ -32,7 +32,7 @@ class QuestionSchedulerService
                 $quiz->total_questions
             );
 
-            $startTime = now()->addSeconds(3);
+            $startTime = now()->addSeconds(6);
 
             foreach ($players as $player) {
                 $player->update([
@@ -107,7 +107,7 @@ class QuestionSchedulerService
     private function calculateTimings($startTime, $index, $questionDuration): array
     {
         $cycleTime = self::OPENING_DURATION + $questionDuration + 
-                     self::MEME_DURATION + self::STANDINGS_DURATION;
+            self::MEME_DURATION + self::STANDINGS_DURATION;
         
         $openingAt = $startTime->copy()->addSeconds($cycleTime * $index);
         $questionAt = $openingAt->copy()->addSeconds(self::OPENING_DURATION);
