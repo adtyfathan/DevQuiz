@@ -120,13 +120,21 @@
                     @if(count($players) > 0)
                         <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
                             @foreach ($players as $index => $player)
+                                @php
+                                    $user = $player->player;
+                                @endphp 
                                 <div wire:key="player-{{ $player->id }}"
                                     class="bg-indigo-50 border border-indigo-200 rounded-xl p-3 text-center text-indigo-700 font-semibold hover:bg-indigo-100 transition-colors duration-200">
                                     <div class="flex items-center justify-center mb-1">
-                                        <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                                            <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
-                                                clip-rule="evenodd"></path>
-                                        </svg>
+                                        @if ($user->avatar)
+                                        <img class="h-10 w-10 object-cover rounded-full border-2 border-gray-300" src="{{ Storage::url($user->avatar) }}"
+                                            alt="Avatar">
+                                    @else
+                                        <div class="h-10 w-10 rounded-full bg-gray-300 flex items-center justify-center">
+                                            <img class="h-10 w-10 object-cover rounded-full border-2 border-gray-300"
+                                                src="{{ asset('images/default-avatar.png') }}" alt="Avatar">
+                                        </div>
+                                    @endif
                                     </div>
                                     {{ $player->username }}
                                 </div>

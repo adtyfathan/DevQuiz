@@ -5,9 +5,6 @@ use Livewire\Volt\Component;
 
 new class extends Component
 {
-    /**
-     * Log the current user out of the application.
-     */
     public function logout(Logout $logout): void
     {
         $logout();
@@ -34,13 +31,42 @@ new class extends Component
                         {{ __('Home') }}
                     </x-nav-link>
                 </div>
+
+                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                    <x-nav-link :href="route('profile')" :active="request()->routeIs('profile')" wire:navigate>
+                        {{ __('Profile') }}
+                    </x-nav-link>
+                </div>
+
+                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                    <x-nav-link :href="route('history')" :active="request()->routeIs('history')" wire:navigate>
+                        {{ __('History') }}
+                    </x-nav-link>
+                </div>
+
+                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                    <x-nav-link :href="route('about')" :active="request()->routeIs('about')" wire:navigate>
+                        {{ __('About Us') }}
+                    </x-nav-link>
+                </div>
             </div>
 
             <!-- Settings Dropdown -->
             <div class="hidden sm:flex sm:items-center sm:ms-6">
                 <x-dropdown align="right" width="48">
                     <x-slot name="trigger">
-                        <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150">
+                        <button class="inline-flex gap-3 items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150">
+                            @if (Auth::user()->avatar)
+                                <img class="h-8 w-8 object-cover rounded-full border-2 border-gray-300"
+                                    src="{{ Storage::url(Auth::user()->avatar) }}" alt="Current avatar">
+                            @else
+                                <div class="h-8 w-8 rounded-full bg-gray-300 flex items-center justify-center">
+                                    <img class="h-8 w-8 object-cover rounded-full border-2 border-gray-300" 
+                                        src="{{ asset('images/default-avatar.png') }}"
+                                        alt="Current avatar">
+                                </div>
+                            @endif
+                            
                             <div x-data="{{ json_encode(['name' => auth()->user()->name]) }}" x-text="name" x-on:profile-updated.window="name = $event.detail.name"></div>
 
                             <div class="ms-1">
@@ -97,6 +123,13 @@ new class extends Component
                 <x-responsive-nav-link :href="route('profile')" wire:navigate>
                     {{ __('Profile') }}
                 </x-responsive-nav-link>
+
+            <div class="pt-2 pb-3 space-y-1">
+                <x-responsive-nav-link :href="route('about')" :active="request()->routeIs('about')" wire:navigate>
+                    {{ __('About Us') }}
+                </x-responsive-nav-link>
+            </div>
+
 
                 <!-- Authentication -->
                 <button wire:click="logout" class="w-full text-start">

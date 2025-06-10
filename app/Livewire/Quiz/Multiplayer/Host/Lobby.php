@@ -86,7 +86,7 @@ class Lobby extends Component
 
         if ($quiz && $quiz->status === 'finished') {
             $this->redirect(
-                route('quiz.multiplayer.host.summary', ['completedQuizId' => $quiz->id]), 
+                route('quiz.multiplayer.host.summary', ['multiplayerQuizId' => $quiz->id]), 
                 navigate: true
             );
         }
