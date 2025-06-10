@@ -39,25 +39,25 @@
                                 <div class="group bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100 hover:border-gray-200">
                                     <!-- Quiz Header with Image -->
                                     <div class="relative h-48 overflow-hidden">
-                                        <img src="{{ asset('images/' . $completedQuiz->multiplayerQuiz->category . '.png') }}" 
-                                             alt="{{ $completedQuiz->multiplayerQuiz->category }} quiz" 
-                                             class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+                                        <!-- <img src="{{ asset('images/' . $completedQuiz->quiz_type === 'singleplayer' ? $completedQuiz->singleplayerQuiz->category : $completedQuiz->multiplayerQuiz->category . '.png') }}" 
+                                            alt="{{ $completedQuiz->quiz_type === 'singleplayer' ? $completedQuiz->singleplayerQuiz->category : $completedQuiz->multiplayerQuiz->category }} quiz" 
+                                            class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" /> -->
                                         <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
 
                                         <!-- Badges -->
                                         <div class="absolute top-4 left-4 flex gap-2">
                                             <span class="bg-white/20 backdrop-blur-md text-black px-3 py-1.5 rounded-full text-xs font-semibold uppercase tracking-wide border border-white/20">
-                                                {{ $completedQuiz->multiplayerQuiz->category }}
+                                                {{ $completedQuiz->quiz_type === 'singleplayer' ? $completedQuiz->singleplayerQuiz->category : $completedQuiz->multiplayerQuiz->category }}
                                             </span>
                                             <span class="bg-white/20 backdrop-blur-md text-black px-3 py-1.5 rounded-full text-xs font-semibold uppercase tracking-wide border border-white/20">
-                                                {{ $completedQuiz->multiplayerQuiz->difficulty }}
+                                                {{ $completedQuiz->quiz_type === 'singleplayer' ? $completedQuiz->singleplayerQuiz->difficulty : $completedQuiz->multiplayerQuiz->difficulty }}
                                             </span>
                                         </div>
 
                                         <!-- Quiz Title -->
                                         <div class="absolute bottom-4 left-4 right-4">
                                             <h3 class="text-xl font-bold text-white mb-1 line-clamp-2 capitalize">
-                                                {{ $completedQuiz->multiplayerQuiz->lobby_name }}
+                                                {{ $completedQuiz->quiz_type === 'singleplayer' ? $completedQuiz->singleplayerQuiz->category . ' Quiz' : $completedQuiz->multiplayerQuiz->lobby_name }}
                                             </h3>
                                         </div>
                                     </div>
@@ -65,7 +65,7 @@
                                     <!-- Quiz Details -->
                                     <div class="p-6 space-y-4">
                                         <div class="pt-2">
-                                            <p class="text-sm text-gray-600 font-medium">{{ $completedQuiz->multiplayerPlayer->username }}</p>
+                                            <p class="text-sm text-gray-600 font-medium">{{ $completedQuiz->quiz_type === 'singleplayer' ? $completedQuiz->singleplayerQuiz->user->name : $completedQuiz->multiplayerPlayer->username }}</p>
                                         </div>
 
                                         <div class="grid grid-cols-2 gap-4">
@@ -83,12 +83,22 @@
                                             <div class="flex justify-between items-center mb-2">
                                                 <p class="text-xs font-medium text-blue-700 uppercase tracking-wide">Accuracy</p>
                                                 <p class="text-sm font-bold text-blue-900">
-                                                    {{ $completedQuiz->true_answer_count }} / {{ $completedQuiz->multiplayerQuiz->total_questions }}
+                                                    {{ $completedQuiz->true_answer_count }} / {{ $completedQuiz->quiz_type === 'singleplayer' ? $completedQuiz->singleplayerQuiz->total_questions : $completedQuiz->multiplayerQuiz->total_questions }}
                                                 </p>
                                             </div>
                                             <div class="w-full bg-blue-200 rounded-full h-2">
-                                                <div class="bg-gradient-to-r from-blue-500 to-blue-600 h-2 rounded-full transition-all duration-300" 
-                                                     style="width: {{ ($completedQuiz->true_answer_count / $completedQuiz->multiplayerQuiz->total_questions) * 100 }}%"></div>
+                                                <div 
+                                                    class="bg-gradient-to-r from-blue-500 to-blue-600 h-2 rounded-full transition-all duration-300"
+                                                    style="width: {{
+                                                        (
+                                                            $completedQuiz->true_answer_count /
+                                                            ($completedQuiz->quiz_type === 'singleplayer' 
+                                                                ? $completedQuiz->singleplayerQuiz->total_questions 
+                                                                : $completedQuiz->multiplayerQuiz->total_questions
+                                                            )
+                                                        ) * 100
+                                                    }}%">
+                                                </div>
                                             </div>
                                         </div>
 
