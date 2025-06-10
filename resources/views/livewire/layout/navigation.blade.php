@@ -43,6 +43,12 @@ new class extends Component
                         {{ __('History') }}
                     </x-nav-link>
                 </div>
+
+                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                    <x-nav-link :href="route('about')" :active="request()->routeIs('about')" wire:navigate>
+                        {{ __('About Us') }}
+                    </x-nav-link>
+                </div>
             </div>
 
             <!-- Settings Dropdown -->
@@ -117,6 +123,13 @@ new class extends Component
                 <x-responsive-nav-link :href="route('profile')" wire:navigate>
                     {{ __('Profile') }}
                 </x-responsive-nav-link>
+
+            <div class="pt-2 pb-3 space-y-1">
+                <x-responsive-nav-link :href="route('about')" :active="request()->routeIs('about')" wire:navigate>
+                    {{ __('About Us') }}
+                </x-responsive-nav-link>
+            </div>
+
 
                 <!-- Authentication -->
                 <button wire:click="logout" class="w-full text-start">
