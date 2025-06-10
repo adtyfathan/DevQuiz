@@ -17,7 +17,8 @@ class SingleplayerQuiz extends Model
         'category',
         'difficulty',
         'started_at',
-        'finished_at'
+        'finished_at',
+        'total_questions'
     ];
     
     public function user()

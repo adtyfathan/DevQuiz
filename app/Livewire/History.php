@@ -7,6 +7,7 @@ use Livewire\Component;
 use Livewire\Attributes\Layout;
 use App\Models\CompletedQuiz;
 use App\Models\MultiplayerQuiz;
+use App\Models\SingleplayerQuiz;
 
 class History extends Component
 {
@@ -25,6 +26,7 @@ class History extends Component
     {
         $this->completedQuizzes = CompletedQuiz::with([
             'multiplayerPlayer',
+            'singleplayerQuiz.user',
             'multiplayerQuiz'
         ])->where('user_id', $this->userId)->get();
 

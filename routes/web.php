@@ -6,6 +6,11 @@ use App\Livewire\Profile;
 use App\Livewire\History;
 use App\Livewire\AboutUs;
 
+// Singleplayer
+use App\Livewire\Quiz\Singleplayer\Start as SingleStart;
+use App\Livewire\Quiz\Singleplayer\Summary as SingleSummary;
+
+
 // Host
 use App\Livewire\Quiz\Multiplayer\Host\Lobby as HostLobby;
 use App\Livewire\Quiz\Multiplayer\Host\Create as CreateLobby;
@@ -29,7 +34,8 @@ Route::middleware(['auth'])->group(function(){
     
     Route::prefix('quiz')->name('quiz')->group(function(){
         Route::prefix('singleplayer')->name('.singleplayer')->group(function(){
-            // Singleplayer routes
+            Route::get('start/{quizId}', SingleStart::class)->name('.start');
+            Route::get('summary/{completedQuizId}', SingleSummary::class)->name('.summary');
         });
 
         Route::prefix('multiplayer')->name('.multiplayer')->group(function(){
