@@ -361,7 +361,7 @@
                                 </div>
                             </div>
                             <div class="text-right">
-                                <p class="text-xl font-bold ${textColor}">${player.point}</p>
+                                <p class="text-xl font-bold ${textColor}">${player.point ? player.point : '0'}</p>
                                 <p class="text-sm ${textColor} opacity-75">points</p>
                             </div>
                         </div>

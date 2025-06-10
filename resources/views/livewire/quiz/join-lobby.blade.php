@@ -3,7 +3,8 @@
     <div
         class="overflow-hidden bg-gradient-to-br from-blue-50 to-purple-50 shadow-xl sm:rounded-2xl border border-blue-100 w-fit">
         <div class="p-6 sm:p-8 lg:p-10">
-            <div class="text-center mb-8">
+            <div class="text-center mb-8 flex justify-center items-center gap-4">
+                <img src="{{ asset('images/logo.png') }}" alt="logo" width="54">
                 <h2 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
                     DevQuiz
                 </h2>
