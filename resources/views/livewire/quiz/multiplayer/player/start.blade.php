@@ -243,9 +243,6 @@
                         }
 
                         @this.call('handlePlayerAnswer', correctPoint, userAnswer, isCorrect, question.id);
-
-                        // Stay on quiz section - don't change view here
-                        // The meme phase will handle the transition based on the scheduled timing
                     });
                 });
             },

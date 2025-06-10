@@ -45,7 +45,9 @@ Broadcast::channel('multiplayer.{quizId}', function ($user, $quizId) {
         return true;
     }
 
-   return true;
+   return MultiplayerPlayer::where('multiplayer_quiz_id', $quizId)
+        ->where('player_id', $user->id)
+        ->exists();
 });
 
 Broadcast::channel('quiz-ended.{quizId}', function ($user, $quizId) {

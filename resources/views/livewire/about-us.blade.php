@@ -41,19 +41,19 @@
                     <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 text-center">
                         <!-- Team Member 1 -->
                         <div>
-                            <img src="/images/amba.jpeg" alt="Fathan" class="w-32 h-32 mx-auto rounded-full object-cover shadow-md">
+                            <img src="{{ asset('images/fathan.jpg') }}" alt="Fathan" class="w-32 h-32 mx-auto rounded-full object-cover shadow-md">
                             <p class="mt-2 text-lg font-medium text-gray-900">Aditya Fathan Naufaldi</p>
                         </div>
 
                         <!-- Team Member 2 -->
                         <div>
-                            <img src="/images/amba.jpeg" alt="Fikri" class="w-32 h-32 mx-auto rounded-full object-cover shadow-md">
+                            <img src="{{ asset('images/fikri.jpg') }}" alt="Fikri" class="w-32 h-32 mx-auto rounded-full object-cover shadow-md">
                             <p class="mt-2 text-lg font-medium text-gray-900">Muhammad Fikri Firmansyah</p>
                         </div>
 
                         <!-- Team Member 3 -->
                         <div>
-                            <img src="/images/amba.jpeg" alt="Zaky" class="w-32 h-32 mx-auto rounded-full object-cover shadow-md">
+                            <img src="{{ asset('images/zaky.jpg') }}" alt="Zaky" class="w-32 h-32 mx-auto rounded-full object-cover shadow-md">
                             <p class="mt-2 text-lg font-medium text-gray-900">Ahmad Zaky</p>
                         </div>
                     </div>

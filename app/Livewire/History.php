@@ -38,7 +38,13 @@ class History extends Component
 
     public function redirectPlayerSummary($completedQuizId)
     {
-        $this->redirect(route('quiz.multiplayer.player.summary', ['completedQuizId' => $completedQuizId]), true);
+        $completedQuizType = CompletedQuiz::find($completedQuizId)->quiz_type;
+        
+        if($completedQuizType === "multiplayer"){
+            $this->redirect(route('quiz.multiplayer.player.summary', ['completedQuizId' => $completedQuizId]), true);
+        } else {
+            $this->redirect(route('quiz.singleplayer.summary', ['completedQuizId' => $completedQuizId]), true);
+        }
     }
 
     public function redirectHostSummary($multiplayerQuizId)
