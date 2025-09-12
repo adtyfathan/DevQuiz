@@ -10,7 +10,7 @@
             
             <!-- Page Header -->
             <div class="mb-12 text-center">
-                <h1 class="text-4xl font-bold text-gray-900 mb-4">Quiz History</h1>
+                <h1 class="text-4xl font-bold text-blue-600 mb-4">Quiz History</h1>
                 <p class="text-lg text-gray-600 max-w-2xl mx-auto">
                     Track your quiz journey and review your performance across all completed and hosted quizzes
                 </p>
@@ -90,13 +90,13 @@
                                                                     <div 
                                                                         class="bg-gradient-to-r from-blue-500 to-blue-600 h-2 rounded-full transition-all duration-300"
                                                                         style="width: {{
-                                                                            (
-                                                                                $completedQuiz->true_answer_count /
-                                                                                ($completedQuiz->quiz_type === 'singleplayer'
-                                                                                    ? $completedQuiz->singleplayerQuiz->total_questions
-                                                                                    : $completedQuiz->multiplayerQuiz->total_questions
-                                                                                )
-                                                                            ) * 100
+            (
+                $completedQuiz->true_answer_count /
+                ($completedQuiz->quiz_type === 'singleplayer'
+                    ? $completedQuiz->singleplayerQuiz->total_questions
+                    : $completedQuiz->multiplayerQuiz->total_questions
+                )
+            ) * 100
                                                                         }}%">
                                                                     </div>
                                                                 </div>

@@ -5,7 +5,7 @@
         </h2>
     </x-slot>
 
-    <div class="py-12 bg-gradient-to-br from-indigo-50 via-white to-cyan-50 min-h-screen">
+    <div class="py-12 bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 min-h-screen">
         <div class="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
             <!-- Header Section -->
             <div class="text-center mb-10">
