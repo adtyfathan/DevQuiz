@@ -12,7 +12,7 @@
                 <div class="flex flex-wrap gap-3 mb-6 pb-4 border-b border-gray-200">
                     <!-- Edit Button -->
                     <a href="/quiz/multiplayer/host/edit/{{ $quiz->id }}" wire:navigate
-                        class="inline-flex items-center px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-lg transition-colors duration-200 shadow-sm hover:shadow-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                        class="{{ $quiz->status !== 'waiting' ? 'pointer-events-none' : '' }} inline-flex items-center px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-lg transition-colors duration-200 shadow-sm hover:shadow-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
                         <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
@@ -22,7 +22,7 @@
                     </a>
 
                     <!-- Delete Button -->
-                    <button wire:click="deleteLobby" {{ $quiz->status === 'in_progress' ? 'disabled' : '' }}
+                    <button wire:click="deleteLobby" {{ $quiz->status !== 'waiting' ? 'disabled' : '' }}
                         wire:confirm="Are you sure you want to delete this lobby?"
                         class="inline-flex items-center px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-medium rounded-lg transition-colors duration-200 shadow-sm hover:shadow-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2">
                         <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -70,10 +70,10 @@
                             <span class="font-semibold text-gray-600 min-w-[100px]">Name:</span>
                             <span class="text-gray-800">{{ $quiz->lobby_name }}</span>
                         </div>
-                        <div class="flex items-start md:col-span-2">
+                        {{-- <div class="flex items-start md:col-span-2">
                             <span class="font-semibold text-gray-600 min-w-[100px]">Description:</span>
                             <span class="text-gray-800">{{ $quiz->lobby_description }}</span>
-                        </div>
+                        </div> --}}
                         <div class="flex items-center">
                             <span class="font-semibold text-gray-600 min-w-[100px]">Category:</span>
                             <span
@@ -92,6 +92,12 @@
                             <span class="font-semibold text-gray-600 min-w-[100px]">Questions:</span>
                             <span
                                 class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800">{{ $quiz->total_questions }}</span>
+                        </div>
+                        <div class="flex items-center">
+                            <span class="font-semibold text-gray-600 min-w-[100px]">Duration:</span>
+                            <span
+                                class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800">{{ $quiz->question_duration }}
+                                seconds</span>
                         </div>
                     </div>
                 </div>
@@ -121,7 +127,7 @@
                         <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
                             @foreach ($players as $index => $player)
                                 @php
-                                    $user = $player->player;
+        $user = $player->player;
                                 @endphp 
                                 <div wire:key="player-{{ $player->id }}"
                                     class="bg-indigo-50 border border-indigo-200 rounded-xl p-3 text-center text-indigo-700 font-semibold hover:bg-indigo-100 transition-colors duration-200">
@@ -161,10 +167,8 @@
     <script>
         const lobby = {
             init() {
-                document.addEventListener('livewire:initialized', () => {
-                    this.initializeEventListeners();
-                    this.initializeCopyButton();
-                });
+                this.initializeEventListeners();
+                this.initializeCopyButton();
             },
 
             initializeEventListeners() {
@@ -268,7 +272,7 @@
             }
         };
 
-        lobby.init();
+        document.addEventListener('livewire:navigated', lobby.init())
     </script>
     @endscript
 </div>

@@ -66,14 +66,6 @@
                                             <option value="Docker">🐳 Docker</option>
                                             <option value="Laravel">🔴 Laravel</option>
                                         </select>
-                                        <div
-                                            class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-                                            <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor"
-                                                viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M19 9l-7 7-7-7"></path>
-                                            </svg>
-                                        </div>
                                     </div>
                                 </div>
 
@@ -88,14 +80,6 @@
                                             <option value="medium">🟡 Medium</option>
                                             <option value="hard">🔴 Hard</option>
                                         </select>
-                                        <div
-                                            class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-                                            <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor"
-                                                viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M19 9l-7 7-7-7"></path>
-                                            </svg>
-                                        </div>
                                     </div>
                                 </div>
 
@@ -103,9 +87,19 @@
                                 <div class="space-y-2">
                                     <label for="total_questions"
                                         class="block text-sm font-medium text-gray-700 mb-2">Total Questions</label>
-                                    <input type="number" name="total_questions" id="total_questions"
+                                    <div class="relative">
+                                        <select name="total_questions" id="total_questions" wire:model.number="total_questions"
+                                            class="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 appearance-none cursor-pointer hover:border-gray-300">
+                                            <option value="5">5</option>
+                                            <option value="10">10</option>
+                                            <option value="15">15</option>
+                                            <option value="20">20</option>
+                                        </select>
+                                    </div>
+                                    
+                                    {{-- <input type="number" name="total_questions" id="total_questions"
                                         wire:model="total_questions" placeholder="Enter number of questions"
-                                        class="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 hover:border-gray-300">
+                                        class="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 hover:border-gray-300"> --}}
                                 </div>
 
                                 <!-- Question Duration -->
@@ -113,9 +107,18 @@
                                     <label for="question_duration"
                                         class="block text-sm font-medium text-gray-700 mb-2">Question Duration
                                         (seconds)</label>
-                                    <input type="number" name="question_duration" id="question_duration"
+                                    <div class="relative">
+                                        <select name="question_duration" id="question_duration" wire:model.number="question_duration"
+                                            class="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 appearance-none cursor-pointer hover:border-gray-300">
+                                            <option value="10">10</option>
+                                            <option value="15">15</option>
+                                            <option value="20">20</option>
+                                        </select>
+                                    </div>
+
+                                    {{-- <input type="number" name="question_duration" id="question_duration"
                                         wire:model="question_duration" placeholder="Time per question"
-                                        class="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 hover:border-gray-300">
+                                        class="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 hover:border-gray-300"> --}}
                                 </div>
                             </div>
                         </div>
@@ -181,14 +184,6 @@
                                             <option value="true">✅ Yes, show scores</option>
                                             <option value="false">❌ No, keep scores hidden</option>
                                         </select>
-                                        <div
-                                            class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-                                            <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor"
-                                                viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M19 9l-7 7-7-7"></path>
-                                            </svg>
-                                        </div>
                                     </div>
                                 </div>
 
@@ -202,14 +197,6 @@
                                             <option value="true">✅ Yes, show review</option>
                                             <option value="false">❌ No, skip review</option>
                                         </select>
-                                        <div
-                                            class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-                                            <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor"
-                                                viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M19 9l-7 7-7-7"></path>
-                                            </svg>
-                                        </div>
                                     </div>
                                 </div>
                             </div>

@@ -11,12 +11,12 @@ class Create extends Component
 {
     public $category = 'Code'; // Set default value
     public $difficulty = 'easy'; // Set default value
-    public $total_questions;
+    public $total_questions = 5;
     public $lobby_name;
     public $lobby_description;
     public $show_score = 'true';
     public $show_review = 'true';
-    public $question_duration;
+    public $question_duration = 10;
     public $errorMessage = '';
 
     public $lobby_code;
@@ -31,7 +31,7 @@ class Create extends Component
         'lobby_description' => 'nullable|string|max:1000',
         'show_score' => 'required|in:true,false', 
         'show_review' => 'required|in:true,false', 
-        'question_duration' => 'required|integer|min:10|max:60',
+        'question_duration' => 'required|integer|min:10|max:20',
     ];
 
     // Real-time validation messages
@@ -53,7 +53,7 @@ class Create extends Component
         'question_duration.required' => 'Please set question duration.',
         'question_duration.integer' => 'Question duration must be a number.',
         'question_duration.min' => 'Minimum duration is 10 seconds.',
-        'question_duration.max' => 'Maximum duration is 60 seconds.',
+        'question_duration.max' => 'Maximum duration is 20 seconds.',
     ];
 
     public function updated($propertyName)

@@ -400,6 +400,6 @@
             }
         };
 
-        quiz.init();
+        document.addEventListener('livewire:navigated', quiz.init())
     </script>
     @endscript

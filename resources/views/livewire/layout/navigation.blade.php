@@ -3,8 +3,7 @@
 use App\Livewire\Actions\Logout;
 use Livewire\Volt\Component;
 
-new class extends Component
-{
+new class extends Component {
     public function logout(Logout $logout): void
     {
         $logout();
@@ -32,15 +31,21 @@ new class extends Component
                     </x-nav-link>
                 </div>
 
-                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                {{-- <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                     <x-nav-link :href="route('profile')" :active="request()->routeIs('profile')" wire:navigate>
                         {{ __('Profile') }}
                     </x-nav-link>
-                </div>
+                </div> --}}
 
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                     <x-nav-link :href="route('history')" :active="request()->routeIs('history')" wire:navigate>
                         {{ __('History') }}
+                    </x-nav-link>
+                </div>
+
+                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                    <x-nav-link :href="route('tutorial')" :active="request()->routeIs('tutorial')" wire:navigate>
+                        {{ __('Tutorial') }}
                     </x-nav-link>
                 </div>
 

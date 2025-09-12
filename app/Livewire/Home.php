@@ -31,7 +31,7 @@ class Home extends Component
     public function getHostedQuiz()
     {
         $this->hostedQuiz = MultiplayerQuiz::where('host_id', $this->userId)
-            ->where('status', 'waiting')
+            ->where('status', ['waiting', 'in_progress'])
             ->first();
     }
 

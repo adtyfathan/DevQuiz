@@ -5,11 +5,12 @@ use App\Livewire\Home;
 use App\Livewire\Profile;
 use App\Livewire\History;
 use App\Livewire\AboutUs;
+use App\Livewire\Tutorial;
+
 
 // Singleplayer
 use App\Livewire\Quiz\Singleplayer\Start as SingleStart;
 use App\Livewire\Quiz\Singleplayer\Summary as SingleSummary;
-
 
 // Host
 use App\Livewire\Quiz\Multiplayer\Host\Lobby as HostLobby;
@@ -31,6 +32,7 @@ Route::middleware(['auth'])->group(function(){
 
     Route::get('about-us', AboutUs::class)->name('about');
 
+    Route::get('tutorial', Tutorial::class)->name('tutorial');
     
     Route::prefix('quiz')->name('quiz')->group(function(){
         Route::prefix('singleplayer')->name('.singleplayer')->group(function(){

@@ -82,14 +82,6 @@
                                             <option value="Laravel" {{ $category == 'Laravel' ? 'selected' : '' }}>🔴
                                                 Laravel</option>
                                         </select>
-                                        <div
-                                            class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-                                            <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor"
-                                                viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M19 9l-7 7-7-7"></path>
-                                            </svg>
-                                        </div>
                                     </div>
                                     @error('category')
                                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -111,14 +103,6 @@
                                             <option value="hard" {{ $difficulty == 'hard' ? 'selected' : '' }}>🔴 Hard
                                             </option>
                                         </select>
-                                        <div
-                                            class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-                                            <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor"
-                                                viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M19 9l-7 7-7-7"></path>
-                                            </svg>
-                                        </div>
                                     </div>
                                     @error('difficulty')
                                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -129,10 +113,15 @@
                                 <div class="space-y-2">
                                     <label for="total_questions"
                                         class="block text-sm font-medium text-gray-700 mb-2">Total Questions</label>
-                                    <input type="number" name="total_questions" id="total_questions"
-                                        wire:model.live="total_questions" placeholder="Enter number of questions"
-                                        min="1" max="20" value="{{ $total_questions }}"
-                                        class="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 hover:border-gray-300 @error('total_questions') border-red-500 @enderror">
+                                    <div class="relative">
+                                        <select name="total_questions" id="total_questions" wire:model.number="total_questions"
+                                            class="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 appearance-none cursor-pointer hover:border-gray-300">
+                                            <option value="5">5</option>
+                                            <option value="10">10</option>
+                                            <option value="15">15</option>
+                                            <option value="20">20</option>
+                                        </select>
+                                    </div>
                                     @error('total_questions')
                                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                     @enderror
@@ -143,10 +132,14 @@
                                     <label for="question_duration"
                                         class="block text-sm font-medium text-gray-700 mb-2">Question Duration
                                         (seconds)</label>
-                                    <input type="number" name="question_duration" id="question_duration"
-                                        wire:model.live="question_duration" placeholder="Time per question" min="10"
-                                        max="60" value="{{ $question_duration }}"
-                                        class="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 hover:border-gray-300 @error('question_duration') border-red-500 @enderror">
+                                    <div class="relative">
+                                        <select name="question_duration" id="question_duration" wire:model.number="question_duration"
+                                            class="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 appearance-none cursor-pointer hover:border-gray-300">
+                                            <option value="10">10</option>
+                                            <option value="15">15</option>
+                                            <option value="20">20</option>
+                                        </select>
+                                    </div>
                                     @error('question_duration')
                                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                     @enderror
@@ -225,14 +218,6 @@
                                             <option value="false" {{ $show_score == 'false' ? 'selected' : '' }}>❌ No,
                                                 keep scores hidden</option>
                                         </select>
-                                        <div
-                                            class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-                                            <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor"
-                                                viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M19 9l-7 7-7-7"></path>
-                                            </svg>
-                                        </div>
                                     </div>
                                     @error('show_score')
                                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -251,14 +236,6 @@
                                             <option value="false" {{ $show_review == 'false' ? 'selected' : '' }}>❌ No,
                                                 skip review</option>
                                         </select>
-                                        <div
-                                            class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-                                            <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor"
-                                                viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M19 9l-7 7-7-7"></path>
-                                            </svg>
-                                        </div>
                                     </div>
                                     @error('show_review')
                                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
