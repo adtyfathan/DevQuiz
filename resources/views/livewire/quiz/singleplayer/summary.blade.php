@@ -5,7 +5,7 @@
         </h2>
     </x-slot>
 
-    <div class="py-12">
+    <div class="py-12 bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
         <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <!-- Summary Stats Cards -->
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
@@ -136,20 +136,20 @@
                 <div class="divide-y divide-gray-200">
                     @foreach($playerAnswers as $index => $playerAnswer)
                         @php
-                            $question = $playerAnswer->question;
-                            $answers = json_decode($question->answers, true);
-                            $correctAnswers = json_decode($question->correct_answers, true);
+    $question = $playerAnswer->question;
+    $answers = json_decode($question->answers, true);
+    $correctAnswers = json_decode($question->correct_answers, true);
 
-                            // Find the correct answer
-                            $correctAnswerKey = null;
-                            foreach ($correctAnswers as $key => $value) {
-                                if ($value === 'true') {
-                                    $correctAnswerKey = str_replace('_correct', '', $key);
-                                    break;
-                                }
-                            }
+    // Find the correct answer
+    $correctAnswerKey = null;
+    foreach ($correctAnswers as $key => $value) {
+        if ($value === 'true') {
+            $correctAnswerKey = str_replace('_correct', '', $key);
+            break;
+        }
+    }
 
-                            $isCorrect = $playerAnswer->answer === $correctAnswerKey;
+    $isCorrect = $playerAnswer->answer === $correctAnswerKey;
                         @endphp
 
                         <div class="p-6 hover:bg-gray-50 transition-colors duration-200">
@@ -208,11 +208,11 @@
                                     @if (!empty($answerText))
                                         <div class="flex items-center p-3 rounded-lg border-2 {{ 
                                             $answerKey === $correctAnswerKey ? 'border-green-200 bg-green-50' :
-                                            ($answerKey === $playerAnswer->answer && !$isCorrect ? 'border-red-200 bg-red-50' : 'border-gray-200 bg-gray-50') 
+                ($answerKey === $playerAnswer->answer && !$isCorrect ? 'border-red-200 bg-red-50' : 'border-gray-200 bg-gray-50') 
                                         }}">
                                         <div class="flex-shrink-0 w-6 h-6 rounded-full border-2 {{ 
                                             $answerKey === $correctAnswerKey ? 'border-green-500 bg-green-500' :
-                                            ($answerKey === $playerAnswer->answer ? 'border-red-500 bg-red-500' : 'border-gray-300') 
+                ($answerKey === $playerAnswer->answer ? 'border-red-500 bg-red-500' : 'border-gray-300') 
                                         }} flex items-center justify-center">
                                         @if($answerKey === $correctAnswerKey)
                                             <svg class="w-3 h-3 text-white" fill="none" stroke="currentColor"
@@ -230,7 +230,7 @@
                                             </div>
                                             <span class="ml-3 text-sm font-medium {{ 
                                                 $answerKey === $correctAnswerKey ? 'text-green-800' :
-                                                ($answerKey === $playerAnswer->answer && !$isCorrect ? 'text-red-800' : 'text-gray-700') 
+                ($answerKey === $playerAnswer->answer && !$isCorrect ? 'text-red-800' : 'text-gray-700') 
                                                 }}">
                                                 {{ strtoupper(substr($answerKey, -1)) }}. {{ $answerText }}
                                             </span>

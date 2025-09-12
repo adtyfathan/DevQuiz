@@ -5,7 +5,7 @@
         </h2>
     </x-slot>
 
-    <div class="py-12 bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50 min-h-screen">
+    <div class="py-12 min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
         <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-8">
 
             <!-- Active Quiz Notifications -->
@@ -167,18 +167,19 @@
 
             <!-- Multiplayer Join Section -->
             <div class="bg-white/80 backdrop-blur-lg rounded-2xl shadow-xl border border-gray-200/50 overflow-hidden">
-                <div class="p-6 lg:p-8">
-                    <div class="flex items-center gap-3 mb-6">
-                        <div class="bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl p-3">
+                <div class="p-6 sm:p-8 lg:p-10">
+                    <div class="flex flex-col sm:flex-row sm:items-center gap-3 mb-6">
+                        <div
+                            class="bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl p-3 flex-shrink-0 self-start sm:self-center">
                             <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z">
+                                    d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 0 014 0zM7 10a2 2 0 11-4 0 2 0 014 0z">
                                 </path>
                             </svg>
                         </div>
                         <div>
-                            <h2 class="text-xl font-bold text-gray-900">Join Multiplayer Quiz</h2>
-                            <p class="text-gray-600 text-sm">Enter a lobby code to join an existing quiz</p>
+                            <h2 class="text-xl sm:text-2xl font-bold text-gray-900">Join Multiplayer Quiz</h2>
+                            <p class="text-gray-600 text-sm sm:text-base">Enter a lobby code to join an existing quiz</p>
                         </div>
                     </div>
                     <livewire:quiz.join-lobby />

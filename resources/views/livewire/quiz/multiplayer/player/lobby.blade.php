@@ -5,7 +5,7 @@
         </h2>
     </x-slot>
 
-    <div class="py-12">
+    <div class="py-12 bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
         <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div class="bg-white shadow-lg sm:rounded-xl p-6">
                 <!-- Leave lobby button -->
@@ -47,10 +47,10 @@
                             <span class="font-semibold text-gray-600 min-w-[100px]">Name:</span>
                             <span class="text-gray-800">{{ $quiz->lobby_name }}</span>
                         </div>
-                        <div class="flex items-start md:col-span-2">
+                        {{-- <div class="flex items-start md:col-span-2">
                             <span class="font-semibold text-gray-600 min-w-[100px]">Description:</span>
                             <span class="text-gray-800">{{ $quiz->lobby_description }}</span>
-                        </div>
+                        </div> --}}
                         <div class="flex items-center">
                             <span class="font-semibold text-gray-600 min-w-[100px]">Category:</span>
                             <span
@@ -70,6 +70,11 @@
                             <span
                                 class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800">{{ $quiz->total_questions }}</span>
                         </div>
+                        <div class="flex items-center">
+                            <span class="font-semibold text-gray-600 min-w-[100px]">Duration:</span>
+                            <span
+                                class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800">{{ $quiz->question_duration }} seconds</span>
+                        </div>
                     </div>
                 </div>
 
@@ -87,7 +92,7 @@
                         <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
                             @foreach ($players as $index => $player)
                                 @php
-                                    $user = $player->player;
+        $user = $player->player;
                                 @endphp
                                 <div wire:key="player-{{ $player->id }}"
                                     class="bg-indigo-50 border border-indigo-200 rounded-xl p-3 text-center text-indigo-700 font-semibold hover:bg-indigo-100 transition-colors duration-200">
@@ -232,7 +237,7 @@
             }
         };
 
-        lobby.init();
+        document.addEventListener('livewire:navigated', lobby.init())
     </script>
     @endscript
 </div>

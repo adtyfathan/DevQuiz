@@ -1,17 +1,11 @@
 <div class="bg-gradient-to-br from-indigo-900 via-purple-800 to-pink-700 min-h-screen">
-    <!-- Background Pattern -->
-    <div class="absolute inset-0 bg-black bg-opacity-20"></div>
-    <div class="absolute inset-0"
-        style="background-image: radial-gradient(circle at 25% 25%, rgba(255,255,255,0.1) 0%, transparent 50%), radial-gradient(circle at 75% 75%, rgba(255,255,255,0.05) 0%, transparent 50%);">
-    </div>
-
     <div class="relative min-h-screen py-4 px-4">
         <div class="max-w-4xl mx-auto">
             <!-- Header -->
             <div class="text-center mb-6">
-                <h1 class="text-4xl font-bold text-white mb-2 drop-shadow-lg">Multiplayer Quiz</h1>
+                <h1 class="text-4xl font-bold text-white mb-2 drop-shadow-lg my-4">Multiplayer Quiz</h1>
                 <div id="timer"
-                    class="text-2xl font-semibold text-white bg-black bg-opacity-30 rounded-full px-6 py-2 inline-block backdrop-blur-sm border border-white border-opacity-20">
+                    class="my-6 text-2xl font-semibold text-white bg-black bg-opacity-30 rounded-full px-6 py-2 inline-block backdrop-blur-sm border border-white border-opacity-20">
                 </div>
             </div>
 
@@ -400,6 +394,6 @@
             }
         };
 
-        quiz.init();
+        document.addEventListener('livewire:navigated', quiz.init())
     </script>
     @endscript

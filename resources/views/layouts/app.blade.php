@@ -18,8 +18,10 @@
     </head>
     <body class="font-sans antialiased">
         <div class="min-h-screen bg-gray-100">
-            <livewire:layout.navigation />
-
+            @if (!request()->routeIs('quiz.singleplayer.start') && !request()->routeIs('quiz.multiplayer.player.start'))
+                <livewire:layout.navigation />
+            @endif
+           
             <!-- Page Heading -->
             @if (isset($header))
                 <header class="bg-white shadow">
@@ -32,6 +34,9 @@
             <!-- Page Content -->
             <main>
                 {{ $slot }}
+                @if (!request()->routeIs('quiz.singleplayer.start') && !request()->routeIs('quiz.multiplayer.player.start'))
+                    <livewire:layout.footer />
+                @endif
             </main>
         </div>
     </body>
